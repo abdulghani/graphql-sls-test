@@ -12,7 +12,6 @@ const config: AWS = {
     stage: "dev",
     runtime: "nodejs14.x",
     architecture: "arm64",
-    lambdaHashingVersion: "20201221",
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -22,13 +21,17 @@ const config: AWS = {
       SLS_NAME: "${self:service}",
       SLS_STAGE: "${self:provider.stage}",
     },
-    iamRoleStatements: [
-      {
-        Effect: "Allow",
-        Action: ["lambda:InvokeFunction"],
-        Resource: "*",
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: ["lambda:InvokeFunction"],
+            Resource: "*",
+          },
+        ],
       },
-    ],
+    },
   },
   package: { individually: true },
   plugins: [
