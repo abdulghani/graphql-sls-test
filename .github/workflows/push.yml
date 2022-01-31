@@ -46,5 +46,7 @@ jobs:
         uses: actions/cache@v2
         with:
           key: ${{ runner.os }}-${{ GITHUB.SHA }}-sls-build
+          path: |
+            ./.serverless
       - name: build
         run: ./node_modules/.bin/sls package
