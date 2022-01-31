@@ -22,13 +22,11 @@ jobs:
       - name: install latest npm
         run: |
           ([ ! -d ./node_modules ] && npm install -g npm || echo "CACHE ALREADY EXISTS") &&
-          echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))"
+          echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))" &&
+          echo "PATHS NPM ($(which npm)) NODE ($(which node))"
       - name: install dependencies
         run: |
           [ ! -d ./node_modules ] && npm ci || npm run prepare
-      - name: check deps
-        run: |
-          npm ls -prod -depth=1
 
   build:
     runs-on: ubuntu-latest
