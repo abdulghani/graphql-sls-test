@@ -54,7 +54,9 @@ jobs:
           npm install -g npm &&
           echo "CURRENT VERSION NPM ($(npm -v)) NODE ($(node -v))"
       - name: build
-        run: ./node_modules/.bin/sls package --verbose
+        run: ./node_modules/.bin/sls package
       - name: check serverless
         if: failure()
-        run: ./node_modules/.bin/sls doctor
+        run: |
+          echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))" &&
+          ./node_modules/.bin/sls doctor
