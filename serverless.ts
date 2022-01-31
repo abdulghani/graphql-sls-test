@@ -47,6 +47,10 @@ const config: AWS = {
         packagePath: "./package.json",
         forceExclude: ["aws-sdk"],
       },
+      packager: "npm",
+      packagerOptions: {
+        noInstall: true,
+      },
     },
     prune: { automatic: true, version: 1 },
   },
