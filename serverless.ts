@@ -52,6 +52,7 @@ const config: AWS = {
       packagerOptions: {
         noInstall: false,
       },
+      keepOutputDirectory: false,
     },
     prune: { automatic: true, version: 1 },
   },
