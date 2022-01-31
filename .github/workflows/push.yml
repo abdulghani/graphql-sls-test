@@ -25,8 +25,9 @@ jobs:
           echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))"
       - name: install dependencies
         run: |
-          npm ci &&
-          echo "PROD DEPS:" &&
+          npm ci
+      - name: check deps
+        run: |
           npm ls -prod -depth=1
 
   build:
@@ -52,3 +53,6 @@ jobs:
             ./.serverless
       - name: build
         run: ./node_modules/.bin/sls package
+      - name: check serverless
+        if: failure()
+        run: ./node_modules/.bin/sls doctor
