@@ -1,0 +1,45 @@
+{
+  "name": "graphqljs-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "npm run graphql:generate",
+    "start": "sls offline --stage dev --httpPort 4000 --lambdaPort 4002 --apiKey serverless-offline",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "graphql:sdl": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-sdl || echo \"NOT RUNNING IN CI ENV\"",
+    "graphql:type": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-types || echo \"NOT RUNNING IN CI ENV\"",
+    "graphql:generate": "npm run graphql:sdl; npm run graphql:type"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@serverless/typescript": "^3.0.0",
+    "@types/aws-lambda": "^8.10.92",
+    "@types/node": "^17.0.13",
+    "@types/webpack-node-externals": "^2.5.3",
+    "apollo-server-core": "^3.6.2",
+    "dotenv": "^14.3.2",
+    "serverless": "^3.0.1",
+    "serverless-offline": "^8.4.0",
+    "serverless-prune-plugin": "^2.0.1",
+    "serverless-webpack": "^5.6.1",
+    "ts-loader": "^9.2.6",
+    "ts-morph": "^13.0.3",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.5.5",
+    "webpack": "^5.67.0",
+    "webpack-node-externals": "^3.0.0",
+    "yargs": "^17.3.1"
+  },
+  "dependencies": {
+    "@graphql-tools/merge": "^8.2.1",
+    "aws-lambda": "^1.0.7",
+    "fast-glob": "^3.2.11",
+    "graphql": "^16.3.0",
+    "lodash": "^4.17.21"
+  }
+}
