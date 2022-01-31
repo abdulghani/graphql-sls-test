@@ -52,10 +52,8 @@ jobs:
           key: ${{ runner.os }}-${{ GITHUB.SHA }}-sls-build
           path: |
             ./.serverless
-      - name: run npm install
-        run: ./node_modules/.bin/npm install
       - name: build
-        run: ./node_modules/.bin/sls package
+        run: ./node_modules/.bin/sls package --verbose
       - name: check serverless
         if: failure()
         run: ./node_modules/.bin/sls doctor
