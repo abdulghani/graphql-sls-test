@@ -41,6 +41,7 @@ const config: AWS = {
   ],
   custom: {
     webpack: {
+      concurrency: 1,
       webpackConfig: "./.webpack.config.ts",
       excludeFiles: ["**/*.test.ts"],
       includeModules: {
@@ -49,7 +50,7 @@ const config: AWS = {
       },
       packager: "npm",
       packagerOptions: {
-        noInstall: true,
+        noInstall: false,
       },
     },
     prune: { automatic: true, version: 1 },
