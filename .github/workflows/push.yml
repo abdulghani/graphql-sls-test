@@ -26,3 +26,23 @@ jobs:
       - name: install dependencies
         run: |
           npm ci
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: restore node_modules cache
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+          path: |
+            ./node_modules
+      - name: cache serverless build
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-${{ GITHUB.SHA }}-sls-build
+      - name: build
+        run: ./node_modules/.bin/sls package
