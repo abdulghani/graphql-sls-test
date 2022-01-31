@@ -1,0 +1,28 @@
+name: PUSH CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  install_dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: cache node_modules
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+          path: |
+            ./node_modules
+      - name: install latest npm
+        run: |
+          npm install -g npm &&
+          echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))"
+      - name: install dependencies
+        run: |
+          npm ci
