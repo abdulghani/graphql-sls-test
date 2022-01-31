@@ -25,7 +25,9 @@ jobs:
           echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))"
       - name: install dependencies
         run: |
-          npm ci
+          npm ci &&
+          echo "PROD DEPS:" &&
+          npm ls -prod -depth=1
 
   build:
     runs-on: ubuntu-latest
