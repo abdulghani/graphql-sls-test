@@ -25,7 +25,8 @@ jobs:
           echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))"
       - name: install dependencies
         run: |
-          npm ci
+          [ ! -d ./node_modules ] && npm ci ||
+          npm run prepare
       - name: check deps
         run: |
           npm ls -prod -depth=1
@@ -51,6 +52,8 @@ jobs:
           key: ${{ runner.os }}-${{ GITHUB.SHA }}-sls-build
           path: |
             ./.serverless
+      - name: run npm install
+        run: ./node_modules/.bin/npm install
       - name: build
         run: ./node_modules/.bin/sls package
       - name: check serverless
