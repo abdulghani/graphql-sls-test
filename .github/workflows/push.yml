@@ -21,12 +21,11 @@ jobs:
             ./node_modules
       - name: install latest npm
         run: |
-          npm install -g npm &&
+          ([ ! -d ./node_modules ] && npm install -g npm || echo "CACHE ALREADY EXISTS") &&
           echo "CURRENT NPM VERSION ($(npm -v)) NODE ($(node -v))"
       - name: install dependencies
         run: |
-          [ ! -d ./node_modules ] && npm ci ||
-          npm run prepare
+          [ ! -d ./node_modules ] && npm ci || npm run prepare
       - name: check deps
         run: |
           npm ls -prod -depth=1
@@ -52,6 +51,10 @@ jobs:
           key: ${{ runner.os }}-${{ GITHUB.SHA }}-sls-build
           path: |
             ./.serverless
+      - name: install latest npm
+        run: |
+          npm install -g npm &&
+          echo "CURRENT VERSION NPM ($(npm -v)) NODE ($(node -v))"
       - name: build
         run: ./node_modules/.bin/sls package --verbose
       - name: check serverless
