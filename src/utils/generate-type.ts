@@ -30,7 +30,7 @@ import {
   ParameterDeclarationStructure,
   SourceFile,
 } from "ts-morph";
-import readSdl from "./read-sdl";
+import GraphQLSdlGenerator from "./read-sdl";
 
 let tsMorphLib: typeof import("ts-morph");
 
@@ -46,7 +46,7 @@ const DEFINITIONS_FILE_HEADER = `
 
 interface GeneratorOptions extends DefinitionsGeneratorOptions {
   typePaths: string[];
-  path: string;
+  path?: string;
   outputAs?: "class" | "interface";
   watch?: boolean;
   debug?: boolean;
@@ -98,10 +98,14 @@ interface DefinitionsGeneratorOptions {
    * @default false
    */
   enumsAsTypes?: boolean;
+
+  prefixName?: string;
 }
 
 class GraphQLAstExplorer {
+  private rootNodes: string[] = [];
   private readonly root = ["Query", "Mutation", "Subscription"];
+  private options!: DefinitionsGeneratorOptions;
 
   async explore(
     documentNode: DocumentNode,
@@ -109,6 +113,7 @@ class GraphQLAstExplorer {
     mode: "class" | "interface",
     options: DefinitionsGeneratorOptions = {}
   ): Promise<SourceFile> {
+    this.options = options;
     if (!documentNode) {
       throw new Error("DOCUMENT NODE ARG IS INVALID");
     }
@@ -141,6 +146,7 @@ class GraphQLAstExplorer {
       ? `${DEFINITIONS_FILE_HEADER}\n${options.additionalHeader}\n\n`
       : DEFINITIONS_FILE_HEADER;
     tsFile.insertText(0, header);
+    this.addResolverType(tsFile, options);
     tsFile.addTypeAlias({
       name: "Nullable",
       isExported: false,
@@ -153,6 +159,24 @@ class GraphQLAstExplorer {
     });
 
     return tsFile;
+  }
+
+  private addResolverType(
+    tsFile: SourceFile,
+    options: DefinitionsGeneratorOptions
+  ) {
+    const deduped = this.rootNodes.filter(
+      (item, i) => this.rootNodes.indexOf(item) === i
+    );
+    tsFile.addTypeAlias({
+      name: "IResolver",
+      type: deduped
+        .map((item) =>
+          options.emitTypenameField ? `Omit<${item}, '__typename'>` : item
+        )
+        .join(" & "),
+      isExported: true,
+    });
   }
 
   lookupDefinition(
@@ -248,6 +272,9 @@ class GraphQLAstExplorer {
           ? tsMorphLib.StructureKind.Class
           : tsMorphLib.StructureKind.Interface;
       const isRoot = this.root.indexOf(parentName) >= 0;
+      const nodeName = this.addSymbolIfRoot(upperFirst(parentName));
+      this.rootNodes.push(nodeName);
+
       parentRef = this.addClassOrInterface(tsFile, mode, {
         name: this.addSymbolIfRoot(upperFirst(parentName)),
         isExported: true,
@@ -554,13 +581,15 @@ class GraphQLAstExplorer {
 }
 
 class GraphQLTypeFactory {
-  private readonly graphqlAstExplorer: GraphQLAstExplorer;
+  private graphqlAstExplorer: GraphQLAstExplorer;
+  private graphqlSdlGenerator: GraphQLSdlGenerator;
 
   constructor() {
     this.graphqlAstExplorer = new GraphQLAstExplorer();
+    this.graphqlSdlGenerator = new GraphQLSdlGenerator();
   }
 
-  public async generateType(option: GeneratorOptions): Promise<void> {
+  private getGeneratorOptions(option: GeneratorOptions) {
     const definitionsGeneratorOptions: DefinitionsGeneratorOptions = {
       emitTypenameField: option.emitTypenameField,
       skipResolverArgs: option.skipResolverArgs,
@@ -569,18 +598,51 @@ class GraphQLTypeFactory {
       additionalHeader: option.additionalHeader,
       defaultTypeMapping: option.defaultTypeMapping,
       enumsAsTypes: option.enumsAsTypes,
+      prefixName: option.prefixName,
     };
 
-    const typeDef = await readSdl(option.typePaths);
+    return definitionsGeneratorOptions;
+  }
+
+  public async generateType(option: GeneratorOptions): Promise<void> {
+    this.graphqlAstExplorer = new GraphQLAstExplorer();
+    this.graphqlSdlGenerator = new GraphQLSdlGenerator();
+
+    const generatorOption = this.getGeneratorOptions(option);
+    const typeDef = await this.graphqlSdlGenerator.readSdl(option.typePaths);
     const tsFile = await this.graphqlAstExplorer.explore(
       gql`
         ${typeDef}
       `,
-      option.path,
+      option.path!,
       option.outputAs ?? "interface",
-      definitionsGeneratorOptions
+      generatorOption
     );
     await tsFile.save();
+  }
+
+  public async generateTypeRelative(option: GeneratorOptions): Promise<void> {
+    this.graphqlAstExplorer = new GraphQLAstExplorer();
+    this.graphqlSdlGenerator = new GraphQLSdlGenerator();
+
+    const generatorOption = this.getGeneratorOptions(option);
+    const typeDefs = await this.graphqlSdlGenerator.readSdlList(
+      option.typePaths
+    );
+    const tsFiles = await Promise.all(
+      typeDefs.map(async (item) => {
+        const relativeTypePath = item.path.replace(/\.graphql$/i, ".type.ts");
+        const tsFile = await this.graphqlAstExplorer.explore(
+          gql`
+            ${item.sdl}
+          `,
+          relativeTypePath,
+          option.outputAs ?? "interface",
+          { ...generatorOption, prefixName: item.name }
+        );
+        await tsFile.save();
+      })
+    );
   }
 }
 

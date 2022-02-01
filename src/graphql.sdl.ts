@@ -10,11 +10,19 @@
 const GRAPHQL_GENERATED_SDL = `
 type Query {
   hello: String
-  getUser: String
+  getProduct(id: String): String
+  getUser(id: String): String
+}
+
+type Mutation {
+  createProduct(id: String): String
+  editProduct(id: String): String
+  addUser(id: String): String
 }
 
 schema {
   query: Query
+  mutation: Mutation
 }
 ` as const;
 

@@ -1,0 +1,7 @@
+type Query {
+  getUser(id: String): String
+}
+
+type Mutation {
+  addUser(id: String): String
+}

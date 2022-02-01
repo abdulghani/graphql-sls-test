@@ -6,28 +6,35 @@
   "scripts": {
     "prepare": "npm run graphql:generate",
     "start": "sls offline --stage dev --httpPort 4000 --lambdaPort 4002 --apiKey serverless-offline",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "graphql:sdl": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-sdl || echo \"NOT RUNNING IN CI ENV\"",
     "graphql:type": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-types || echo \"NOT RUNNING IN CI ENV\"",
-    "graphql:generate": "npm run graphql:sdl; npm run graphql:type"
+    "graphql:generate": "npm run graphql:sdl; npm run graphql:type",
+    "test:base": "jest --config ./.jest.config.ts --runInBand --coverage --logHeapUsage",
+    "test": "npm run test:base --"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@graphql-tools/merge": "^8.2.1",
+    "@jest/types": "^27.4.2",
     "@serverless/typescript": "^3.0.0",
     "@types/aws-lambda": "^8.10.92",
+    "@types/jest": "^27.4.0",
     "@types/node": "^17.0.13",
     "@types/webpack-node-externals": "^2.5.3",
     "apollo-server-core": "^3.6.2",
     "dotenv": "^14.3.2",
     "fast-glob": "^3.2.11",
+    "jest": "^27.4.7",
+    "jest-junit": "^13.0.0",
     "npm": "^8.4.0",
+    "reflect-metadata": "^0.1.13",
     "serverless": "^3.0.1",
     "serverless-offline": "^8.4.0",
     "serverless-prune-plugin": "^2.0.1",
     "serverless-webpack": "^5.6.1",
+    "ts-jest": "^27.1.3",
     "ts-loader": "^9.2.6",
     "ts-morph": "^13.0.3",
     "ts-node": "^10.4.0",
@@ -41,6 +48,7 @@
   "dependencies": {
     "aws-lambda": "^1.0.7",
     "graphql": "^16.3.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "ts-transformer-keys": "^0.4.3"
   }
 }

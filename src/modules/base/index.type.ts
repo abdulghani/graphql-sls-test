@@ -10,14 +10,7 @@
 export interface IQuery {
     __typename?: 'IQuery';
     hello(): Nullable<string> | Promise<Nullable<string>>;
-    getUser(): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export interface ISchema {
-    Query: IQuery;
-}
-
-export interface IQuery {
-}
-
+export type IResolver = Omit<IQuery, '__typename'>;
 type Nullable<T> = T | null;

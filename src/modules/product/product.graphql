@@ -1,0 +1,8 @@
+type Query {
+  getProduct(id: String): String
+}
+
+type Mutation {
+  createProduct(id: String): String
+  editProduct(id: String): String
+}
