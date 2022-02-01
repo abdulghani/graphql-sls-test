@@ -169,8 +169,14 @@ class GraphQLAstExplorer {
     const deduped = this.rootNodes.filter(
       (item, i) => this.rootNodes.indexOf(item) === i
     );
+    const name = (() => {
+      if (options.prefixName) {
+        return upperFirst(options.prefixName) + upperFirst("Resolver");
+      }
+      return "IResolver";
+    })();
     tsFile.addTypeAlias({
-      name: "IResolver",
+      name,
       type: deduped
         .map((item) =>
           options.emitTypenameField ? `Omit<${item}, '__typename'>` : item

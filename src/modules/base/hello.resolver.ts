@@ -1,8 +1,7 @@
 import "reflect-metadata";
-import { BaseQuery, SearchInput } from "./index.type";
+import { BaseResolver, SearchInput } from "./index.type";
 
-class HelloResolver implements BaseQuery {
-  __typename?: "BaseQuery" | undefined;
+class HelloResolver implements BaseResolver {
   searchHello(
     payload?: SearchInput | null
   ): (string | null) | Promise<string | null> {

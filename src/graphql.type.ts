@@ -13,9 +13,9 @@ export interface SearchInput {
 
 export interface IQuery {
     __typename?: 'IQuery';
-    getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     hello(): Nullable<string> | Promise<Nullable<string>>;
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
+    getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 

@@ -17,5 +17,5 @@ export interface UserMutation {
     addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export type IResolver = Omit<UserQuery, '__typename'> & Omit<UserMutation, '__typename'>;
+export type UserResolver = Omit<UserQuery, '__typename'> & Omit<UserMutation, '__typename'>;
 type Nullable<T> = T | null;

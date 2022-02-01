@@ -18,5 +18,5 @@ export interface ProductMutation {
     editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export type IResolver = Omit<ProductQuery, '__typename'> & Omit<ProductMutation, '__typename'>;
+export type ProductResolver = Omit<ProductQuery, '__typename'> & Omit<ProductMutation, '__typename'>;
 type Nullable<T> = T | null;

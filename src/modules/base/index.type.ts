@@ -18,5 +18,5 @@ export interface BaseQuery {
 }
 
 export type UTCDateTime = any;
-export type IResolver = Omit<BaseQuery, '__typename'>;
+export type BaseResolver = Omit<BaseQuery, '__typename'>;
 type Nullable<T> = T | null;
