@@ -10,14 +10,21 @@
 const GRAPHQL_GENERATED_SDL = `
 type Query {
   hello: String
-  getProduct(id: String): String
+  searchHello(payload: SearchInput): String
   getUser(id: String): String
+  getProduct(id: String): String
 }
 
+input SearchInput {
+  query: String!
+}
+
+scalar UTCDateTime
+
 type Mutation {
+  addUser(id: String): String
   createProduct(id: String): String
   editProduct(id: String): String
-  addUser(id: String): String
 }
 
 schema {

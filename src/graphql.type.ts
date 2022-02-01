@@ -7,19 +7,26 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export interface SearchInput {
+    query: string;
+}
+
 export interface IQuery {
     __typename?: 'IQuery';
-    hello(): Nullable<string> | Promise<Nullable<string>>;
-    getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    hello(): Nullable<string> | Promise<Nullable<string>>;
+    searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
+    getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface IMutation {
     __typename?: 'IMutation';
-    addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     createProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
+
+export type UTCDateTime = any;
 
 export interface ISchema {
     Query: IQuery;

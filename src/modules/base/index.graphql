@@ -1,3 +1,10 @@
 type Query {
   hello: String
+  searchHello(payload: SearchInput): String
 }
+
+input SearchInput {
+  query: String!
+}
+
+scalar UTCDateTime

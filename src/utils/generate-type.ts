@@ -131,16 +131,15 @@ class GraphQLAstExplorer {
     let { definitions } = documentNode;
     definitions = sortBy(definitions, ["kind", "name"]);
 
-    definitions.forEach((item) =>
+    definitions.forEach((item) => {
       this.lookupDefinition(
         item as Readonly<TypeSystemDefinitionNode>,
         tsFile,
         mode,
         options
-      )
-    );
+      );
+    });
     this.addHeader(options, tsFile);
-
     this.addResolverType(tsFile, options);
     tsFile.addTypeAlias({
       name: "Nullable",
@@ -192,7 +191,8 @@ class GraphQLAstExplorer {
         return this.lookupRootSchemaDefinition(
           item.operationTypes,
           tsFile,
-          mode
+          mode,
+          options
         );
       case "ObjectTypeDefinition":
       case "ObjectTypeExtension":
@@ -217,7 +217,8 @@ class GraphQLAstExplorer {
   lookupRootSchemaDefinition(
     operationTypes: ReadonlyArray<OperationTypeDefinitionNode>,
     tsFile: SourceFile,
-    mode: "class" | "interface"
+    mode: "class" | "interface",
+    options: DefinitionsGeneratorOptions
   ) {
     const structureKind =
       mode === "class"
@@ -236,7 +237,7 @@ class GraphQLAstExplorer {
       const typeName = get(item, "type.name.value");
       const interfaceName = typeName || tempOperationName;
       const interfaceRef = this.addClassOrInterface(tsFile, mode, {
-        name: this.addSymbolIfRoot(upperFirst(interfaceName)),
+        name: this.addSymbolIfRoot(upperFirst(interfaceName), options),
         isExported: true,
         kind: structureKind,
       });
@@ -266,7 +267,7 @@ class GraphQLAstExplorer {
     let parentRef = this.getClassOrInterface(
       tsFile,
       mode,
-      this.addSymbolIfRoot(parentName)
+      this.addSymbolIfRoot(parentName, options)
     );
     if (!parentRef) {
       const structureKind =
@@ -274,11 +275,14 @@ class GraphQLAstExplorer {
           ? tsMorphLib.StructureKind.Class
           : tsMorphLib.StructureKind.Interface;
       const isRoot = this.root.indexOf(parentName) >= 0;
-      const nodeName = this.addSymbolIfRoot(upperFirst(parentName));
-      this.rootNodes.push(nodeName);
+      if (isRoot) {
+        this.rootNodes.push(
+          this.addSymbolIfRoot(upperFirst(parentName), options)
+        );
+      }
 
       parentRef = this.addClassOrInterface(tsFile, mode, {
-        name: this.addSymbolIfRoot(upperFirst(parentName)),
+        name: this.addSymbolIfRoot(upperFirst(parentName), options),
         isExported: true,
         isAbstract: isRoot && mode === "class",
         kind: structureKind,
@@ -338,7 +342,7 @@ class GraphQLAstExplorer {
       item.type,
       options
     );
-    if (!this.isRoot(parentRef.getName()!)) {
+    if (!this.isRoot(parentRef.getName()!, options)) {
       (parentRef as InterfaceDeclaration).addProperty({
         name: propertyName,
         type,
@@ -348,23 +352,12 @@ class GraphQLAstExplorer {
     }
 
     if (options.skipResolverArgs) {
-      console.log("GOING HERE");
       (parentRef as ClassDeclaration).addProperty({
         name: propertyName,
-        type: this.addSymbolIfRoot(type),
+        type: this.addSymbolIfRoot(type, options),
         hasQuestionToken: !required,
       });
     } else {
-      console.log("GOING THERE", {
-        parentRef: parentRef.getName(),
-        isAbstract: mode === "class",
-        name: propertyName,
-        returnType: `${type} | Promise<${type}>`,
-        parameters: this.getFunctionParameters(
-          (item as FieldDefinitionNode).arguments!,
-          options
-        ),
-      });
       (parentRef as ClassDeclaration).addMethod({
         isAbstract: mode === "class",
         name: propertyName,
@@ -391,7 +384,10 @@ class GraphQLAstExplorer {
       const { type: arrayType, required: arrayTypeRequired } =
         this.getNestedType(get(type, "type"));
 
-      const typeName = this.addSymbolIfRoot(get(arrayType, "name.value"));
+      const typeName = this.addSymbolIfRoot(
+        get(arrayType, "name.value"),
+        options
+      );
       const name = arrayTypeRequired
         ? this.getType(typeName, options)
         : `Nullable<${this.getType(typeName, options)}>`;
@@ -402,7 +398,7 @@ class GraphQLAstExplorer {
       };
     }
 
-    const typeName = this.addSymbolIfRoot(get(type, "name.value"));
+    const typeName = this.addSymbolIfRoot(get(type, "name.value"), options);
     return {
       name: required
         ? this.getType(typeName, options)
@@ -563,17 +559,25 @@ class GraphQLAstExplorer {
     });
   }
 
-  addSymbolIfRoot(name: string): string {
-    // if (this.options.prefixName) {
-    //   return this.root.indexOf(name) >= 0
-    //     ? `${upperFirst(this.options.prefixName)}${upperFirst(name)}`
-    //     : name;
-    // }
+  addSymbolIfRoot(name: string, options: DefinitionsGeneratorOptions): string {
+    if (options.prefixName) {
+      return this.root.indexOf(name) >= 0
+        ? `${upperFirst(options.prefixName)}${upperFirst(name)}`
+        : name;
+    }
     return this.root.indexOf(name) >= 0 ? `I${name}` : name;
   }
 
-  isRoot(name: string): boolean {
-    return ["IQuery", "IMutation", "ISubscription"].indexOf(name) >= 0;
+  private prefixWith(str: string[], prefix: string) {
+    return str.map((item) => `${upperFirst(prefix)}${upperFirst(item)}`);
+  }
+
+  isRoot(name: string, options: DefinitionsGeneratorOptions): boolean {
+    const list = ["Query", "Mutation", "Subscription"];
+    if (options.prefixName) {
+      return this.prefixWith(list, options.prefixName).includes(name);
+    }
+    return this.prefixWith(list, "I").includes(name);
   }
 
   addClassOrInterface(
@@ -599,7 +603,7 @@ class GraphQLAstExplorer {
 
 class GraphQLTypeFactory {
   private getGeneratorOptions(option: GeneratorOptions) {
-    const definitionsGeneratorOptions: DefinitionsGeneratorOptions = {
+    return {
       emitTypenameField: option.emitTypenameField,
       skipResolverArgs: option.skipResolverArgs,
       defaultScalarType: option.defaultScalarType,
@@ -609,15 +613,14 @@ class GraphQLTypeFactory {
       enumsAsTypes: option.enumsAsTypes,
       prefixName: option.prefixName,
     };
-
-    return definitionsGeneratorOptions;
   }
 
   public async generateType(option: GeneratorOptions): Promise<void> {
     const graphqlAstExplorer = new GraphQLAstExplorer();
     const graphqlSdlGenerator = new GraphQLSdlGenerator();
+    const generatorOption: DefinitionsGeneratorOptions =
+      this.getGeneratorOptions(option);
 
-    const generatorOption = this.getGeneratorOptions(option);
     const typeDef = await graphqlSdlGenerator.readSdl(option.typePaths);
     const tsFile = await graphqlAstExplorer.explore(
       gql`
@@ -631,13 +634,14 @@ class GraphQLTypeFactory {
   }
 
   public async generateTypeRelative(option: GeneratorOptions): Promise<void> {
-    const graphqlAstExplorer = new GraphQLAstExplorer();
     const graphqlSdlGenerator = new GraphQLSdlGenerator();
+    const generatorOption: DefinitionsGeneratorOptions =
+      this.getGeneratorOptions(option);
 
-    const generatorOption = this.getGeneratorOptions(option);
     const typeDefs = await graphqlSdlGenerator.readSdlList(option.typePaths);
     const tsFiles = await Promise.all(
       typeDefs.map(async (item) => {
+        const graphqlAstExplorer = new GraphQLAstExplorer();
         const relativeTypePath = item.path.replace(/\.graphql$/i, ".type.ts");
         const tsFile = await graphqlAstExplorer.explore(
           gql`

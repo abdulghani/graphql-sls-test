@@ -7,15 +7,15 @@
 
 /* tslint:disable */
 /* eslint-disable */
-export interface IQuery {
-    __typename?: 'IQuery';
+export interface UserQuery {
+    __typename?: 'UserQuery';
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export interface IMutation {
-    __typename?: 'IMutation';
+export interface UserMutation {
+    __typename?: 'UserMutation';
     addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
-export type IResolver = Omit<IQuery, '__typename'> & Omit<IMutation, '__typename'>;
+export type IResolver = Omit<UserQuery, '__typename'> & Omit<UserMutation, '__typename'>;
 type Nullable<T> = T | null;

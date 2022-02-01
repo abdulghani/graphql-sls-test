@@ -7,10 +7,16 @@
 
 /* tslint:disable */
 /* eslint-disable */
-export interface IQuery {
-    __typename?: 'IQuery';
-    hello(): Nullable<string> | Promise<Nullable<string>>;
+export interface SearchInput {
+    query: string;
 }
 
-export type IResolver = Omit<IQuery, '__typename'>;
+export interface BaseQuery {
+    __typename?: 'BaseQuery';
+    hello(): Nullable<string> | Promise<Nullable<string>>;
+    searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export type UTCDateTime = any;
+export type IResolver = Omit<BaseQuery, '__typename'>;
 type Nullable<T> = T | null;
