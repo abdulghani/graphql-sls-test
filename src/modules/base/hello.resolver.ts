@@ -1,7 +1,13 @@
 import "reflect-metadata";
-import { IQuery } from "./index.type";
+import { BaseQuery, SearchInput } from "./index.type";
 
-class HelloResolver implements IQuery {
+class HelloResolver implements BaseQuery {
+  __typename?: "BaseQuery" | undefined;
+  searchHello(
+    payload?: SearchInput | null
+  ): (string | null) | Promise<string | null> {
+    throw new Error("Method not implemented.");
+  }
   public async hello(): Promise<string> {
     return "hello world";
   }
