@@ -4,8 +4,9 @@ type Query {
   """
   hello: String
   searchHello(payload: SearchInput): String
-  multipleInput(payload: SearchInput, name: String): String
+  multipleInput(payload: SearchInput, name: String!): String
   sayHello(name: String): String
+  createHello(payload: CreateInput): String
 }
 
 input SearchInput {
@@ -22,6 +23,11 @@ input SearchInput {
   date: UTCDateTime
 }
 
+input CreateInput {
+  name: String
+  email: String
+}
+
 scalar UTCDateTime
 
 enum Enum {
@@ -34,3 +40,5 @@ type User {
   name: String!
   email: String!
 }
+
+union MyUnion = String | Int | Float

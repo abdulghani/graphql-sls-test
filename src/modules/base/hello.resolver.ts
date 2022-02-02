@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { BaseResolver, SearchInput } from "./index.type";
+import { BaseResolver, CreateInput, SearchInput } from "./index.type";
 
 class HelloResolver implements BaseResolver {
   sayHello(args: {
@@ -20,6 +20,13 @@ class HelloResolver implements BaseResolver {
   }
   public async hello(): Promise<string> {
     return "hello world";
+  }
+
+  createHello(
+    payload?: CreateInput | null
+  ): (string | null) | Promise<string | null> {
+    console.log("PAYLOAD", { payload });
+    return "hello hehehe";
   }
 }
 

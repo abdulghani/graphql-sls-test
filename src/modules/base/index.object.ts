@@ -17,6 +17,14 @@ export const Enum = new graphql.GraphQLEnumType({
   values: { ONE: { value: "ONE" }, TWO: { value: "TWO" } },
 });
 
+export const CreateInput = new graphql.GraphQLInputObjectType({
+  name: "CreateInput",
+  fields: {
+    name: { type: graphql.GraphQLString },
+    email: { type: graphql.GraphQLString },
+  },
+});
+
 export const SearchInput = new graphql.GraphQLInputObjectType({
   name: "SearchInput",
   fields: {
@@ -60,6 +68,10 @@ export const Query = new graphql.GraphQLObjectType({
     sayHello: {
       type: graphql.GraphQLString,
       args: { name: { type: graphql.GraphQLString } },
+    },
+    createHello: {
+      type: graphql.GraphQLString,
+      args: { payload: { type: CreateInput } },
     },
   },
 });

@@ -12,6 +12,11 @@ export enum Enum {
     TWO = "TWO"
 }
 
+export interface CreateInput {
+    name?: Nullable<string>;
+    email?: Nullable<string>;
+}
+
 export interface SearchInput {
     query: string;
     string?: Nullable<string>;
@@ -32,6 +37,7 @@ export interface IMutation {
 
 export interface IQuery {
     __typename?: 'IQuery';
+    createHello(payload?: Nullable<CreateInput>): Nullable<string> | Promise<Nullable<string>>;
     getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     hello(): Nullable<string> | Promise<Nullable<string>>;

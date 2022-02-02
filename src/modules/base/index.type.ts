@@ -23,12 +23,18 @@ export interface SearchInput {
     date?: Nullable<UTCDateTime>;
 }
 
+export interface CreateInput {
+    name?: Nullable<string>;
+    email?: Nullable<string>;
+}
+
 export interface BaseQuery {
     __typename?: 'BaseQuery';
     hello(): Nullable<string> | Promise<Nullable<string>>;
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
     multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    createHello(payload?: Nullable<CreateInput>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface User {

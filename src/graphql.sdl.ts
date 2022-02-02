@@ -13,6 +13,11 @@ schema {
   mutation: Mutation
 }
 
+input CreateInput {
+  name: String
+  email: String
+}
+
 enum Enum {
   ONE
   TWO
@@ -25,6 +30,7 @@ type Mutation {
 }
 
 type Query {
+  createHello(payload: CreateInput): String
   getProduct(id: String): String
   getUser(id: String): String
   """
