@@ -41,7 +41,10 @@ type User {
   email: String!
 }
 
-union MyUnion = String | Int | Float
+"""
+describe union
+"""
+union MyUnion = MyUser | User
 
 interface CommonUser {
   ID: String

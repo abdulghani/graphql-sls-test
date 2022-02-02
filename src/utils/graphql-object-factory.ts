@@ -7,11 +7,13 @@ import {
   FieldDefinitionNode,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
+  InterfaceTypeDefinitionNode,
   Kind,
   NamedTypeNode,
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   TypeNode,
+  UnionTypeDefinitionNode,
 } from "graphql";
 import lodash from "lodash";
 import path from "path";
@@ -112,6 +114,7 @@ class GraphQLObjectFactory {
       Kind.ENUM_TYPE_DEFINITION,
       Kind.INPUT_OBJECT_TYPE_DEFINITION,
       Kind.OBJECT_TYPE_DEFINITION,
+      Kind.UNION_TYPE_DEFINITION,
     ];
     const sorted = definitions.sort((a, b) => {
       return order.indexOf(a.kind) - order.indexOf(b.kind);
@@ -133,8 +136,9 @@ class GraphQLObjectFactory {
       case "InputObjectTypeDefinition":
         return this.createGraphQLInput(def);
       case "InputObjectTypeExtension":
-
+        break;
       case "InterfaceTypeDefinition":
+        return this.createGraphQLInterface(def);
       case "InterfaceTypeExtension":
         break;
       case "ScalarTypeDefinition":
@@ -144,8 +148,9 @@ class GraphQLObjectFactory {
       case "EnumTypeDefinition":
         return this.createGraphqlEnum(def);
       case "EnumTypeExtension":
-
+        break;
       case "UnionTypeDefinition":
+        return this.createGraphqlUnion(def);
       case "UnionTypeExtension":
         break;
     }
@@ -164,7 +169,7 @@ class GraphQLObjectFactory {
 
   private buildGraphqlObjectFields(
     fields?: readonly FieldDefinitionNode[],
-    parent?: ObjectTypeDefinitionNode
+    parent?: ObjectTypeDefinitionNode | InterfaceTypeDefinitionNode
   ) {
     const declaration: any = {};
     fields?.forEach?.((item) => {
@@ -216,10 +221,54 @@ class GraphQLObjectFactory {
       declarations: [
         {
           name: def.name.value,
-          initializer: `new graphql.GraphQLObjectType({
-                name: "${def.name.value}",
-                fields: ${this.buildGraphqlObjectFields(def.fields, def)}
-            })`,
+          initializer: `new graphql.GraphQLObjectType(${this.buildObjectDeclaration(
+            {
+              name: `"${def.name.value}"`,
+              description: (() => {
+                if (def.description?.value) {
+                  return `"${def.description.value}"`;
+                }
+                return undefined;
+              })(),
+              interfaces: (() => {
+                if (!def.interfaces?.length) return undefined;
+                return `[${def.interfaces
+                  ?.map((item) => item.name.value)
+                  .join(",")}]`;
+              })(),
+              fields: (() => {
+                if (!def.fields?.length) {
+                  return undefined;
+                }
+                return `${this.buildGraphqlObjectFields(def.fields, def)}`;
+              })(),
+            }
+          )})`,
+        },
+      ],
+    });
+  }
+
+  private createGraphQLInterface(def: InterfaceTypeDefinitionNode) {
+    this.tsFile.addVariableStatement({
+      leadingTrivia: (w) => w.writeLine("\n"),
+      declarationKind: VariableDeclarationKind.Const,
+      isExported: true,
+      declarations: [
+        {
+          name: def.name.value,
+          initializer: `new graphql.GraphQLInterfaceType(${this.buildObjectDeclaration(
+            {
+              name: `"${def.name.value}"`,
+              description: (() => {
+                if (def.description?.value) {
+                  return `"${def.description.value}"`;
+                }
+                return undefined;
+              })(),
+              fields: `${this.buildGraphqlObjectFields(def.fields, def)}`,
+            }
+          )})`,
         },
       ],
     });
@@ -233,9 +282,17 @@ class GraphQLObjectFactory {
       declarations: [
         {
           name: def.name.value,
-          initializer: `new graphql.GraphQLScalarType({
-              name: "${def.name.value}"
-            })`,
+          initializer: `new graphql.GraphQLScalarType(${this.buildObjectDeclaration(
+            {
+              name: `"${def.name.value}"`,
+              description: (() => {
+                if (def.description?.value) {
+                  return `"${def.description.value}"`;
+                }
+                return undefined;
+              })(),
+            }
+          )})`,
         },
       ],
     });
@@ -249,14 +306,62 @@ class GraphQLObjectFactory {
       declarations: [
         {
           name: def.name.value,
-          initializer: `new graphql.GraphQLEnumType({
-                name: "${def.name.value}",
-                values: {${def.values
-                  ?.map((item) => {
-                    return `"${item.name.value}": { value: "${item.name.value}" }`;
-                  })
-                  .join(",")}}
-            })`,
+          initializer: `new graphql.GraphQLEnumType(${this.buildObjectDeclaration(
+            {
+              name: `"${def.name.value}"`,
+              description: (() => {
+                if (def.description?.value) {
+                  return `"${def.description.value}"`;
+                }
+                return undefined;
+              })(),
+              values: this.buildObjectDeclaration(
+                def.values?.reduce((total: any, item) => {
+                  total[item.name.value] = this.buildObjectDeclaration({
+                    value: `"${item.name.value}"`,
+                  });
+                  return total;
+                }, {})
+              ),
+            }
+          )})`,
+        },
+      ],
+    });
+  }
+
+  private createGraphqlUnion(def: UnionTypeDefinitionNode) {
+    const validTypes =
+      def.types?.filter((item) => this.typeList.includes(item.name.value)) ??
+      [];
+
+    if (validTypes.length !== def.types?.length) {
+      throw new Error(
+        `INVALID TYPES FOR UNION (${def.types
+          ?.filter((item) => !this.typeList.includes(item.name.value))
+          .map((item) => item.name.value)
+          .join(", ")})`
+      );
+    }
+
+    this.tsFile.addVariableStatement({
+      leadingTrivia: (w) => w.writeLine("\n"),
+      declarationKind: VariableDeclarationKind.Const,
+      isExported: true,
+      declarations: [
+        {
+          name: def.name.value,
+          initializer: `new graphql.GraphQLUnionType(${this.buildObjectDeclaration(
+            {
+              name: `"${def.name.value}"`,
+              description: (() => {
+                if (def.description?.value)
+                  return `"${def.description?.value}"`;
+                return undefined;
+              })(),
+              types: `[${validTypes.map((item) => item.name.value)}]`,
+            }
+          )})`,
         },
       ],
     });
@@ -300,6 +405,12 @@ class GraphQLObjectFactory {
           initializer: `new graphql.GraphQLInputObjectType(
             ${this.buildObjectDeclaration({
               name: `"${def.name.value}"`,
+              description: (() => {
+                if (def.description?.value) {
+                  return `"${def.description.value}"`;
+                }
+                return undefined;
+              })(),
               fields: this.buildGraphqlInputFields(def.fields),
             })})`,
         },
