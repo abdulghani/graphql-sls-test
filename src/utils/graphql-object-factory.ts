@@ -37,8 +37,19 @@ class GraphQLObjectFactory {
   private tsMorphLib!: typeof import("ts-morph");
   private tsFile!: SourceFile;
   private typeList: string[] = [];
+  private config: any = {};
 
-  private async generateFile(outputPath: string) {
+  private async generateFile({
+    outputPath,
+    emitResolver,
+  }: {
+    outputPath: string;
+    emitResolver?: boolean;
+  }) {
+    this.config = {
+      outputPath,
+      emitResolver,
+    };
     this.tsMorphLib = await import("ts-morph");
     const tsProject = new this.tsMorphLib.Project({
       tsConfigFilePath: path.join(process.cwd(), "./tsconfig.json"),
@@ -79,11 +90,13 @@ class GraphQLObjectFactory {
   public async generate({
     sdl,
     outputPath,
+    emitResolver,
   }: {
     sdl: DocumentNode;
     outputPath: string;
+    emitResolver?: boolean;
   }) {
-    await this.generateFile(outputPath);
+    await this.generateFile({ outputPath, emitResolver });
     const definitions = this.getDefinitions(sdl);
 
     this.traverseDefinitions(definitions);
@@ -178,13 +191,14 @@ class GraphQLObjectFactory {
           return undefined;
         })(),
         resolve: (() => {
+          const isQueryMutation = ["query", "mutation"]?.includes?.(
+            (parent?.name?.value ?? "")?.toLowerCase?.()
+          );
           if (
-            ["query", "mutation"].includes(
-              (parent?.name?.value ?? "")?.toLowerCase?.()
-            ) ||
-            item.arguments?.length
+            this.config.emitResolver &&
+            (isQueryMutation || item.arguments?.length)
           ) {
-            // return `function (source, args, context, info) {}`;
+            return `function (source, args, context, info) {}`;
           }
           return undefined;
         })(),
