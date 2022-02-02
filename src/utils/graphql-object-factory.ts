@@ -176,7 +176,7 @@ class GraphQLObjectFactory {
             ) ||
             item.arguments?.length
           ) {
-            return `function (source, args, context, info) {}`;
+            // return `function (source, args, context, info) {}`;
           }
           return undefined;
         })(),

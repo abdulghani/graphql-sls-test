@@ -28,6 +28,7 @@ export interface BaseQuery {
     hello(): Nullable<string> | Promise<Nullable<string>>;
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
     multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface User {

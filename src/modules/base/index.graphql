@@ -5,6 +5,7 @@ type Query {
   hello: String
   searchHello(payload: SearchInput): String
   multipleInput(payload: SearchInput, name: String): String
+  sayHello(name: String): String
 }
 
 input SearchInput {

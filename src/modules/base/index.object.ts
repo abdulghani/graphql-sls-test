@@ -37,15 +37,10 @@ export const SearchInput = new graphql.GraphQLInputObjectType({
 export const Query = new graphql.GraphQLObjectType({
   name: "Query",
   fields: {
-    hello: {
-      type: graphql.GraphQLString,
-      description: "description for this",
-      resolve: function (source, args, context, info) {},
-    },
+    hello: { type: graphql.GraphQLString, description: "description for this" },
     searchHello: {
       type: graphql.GraphQLString,
       args: { payload: { type: SearchInput } },
-      resolve: function (source, args, context, info) {},
     },
     multipleInput: {
       type: graphql.GraphQLString,
@@ -53,7 +48,10 @@ export const Query = new graphql.GraphQLObjectType({
         payload: { type: SearchInput },
         name: { type: graphql.GraphQLString },
       },
-      resolve: function (source, args, context, info) {},
+    },
+    sayHello: {
+      type: graphql.GraphQLString,
+      args: { name: { type: graphql.GraphQLString } },
     },
   },
 });

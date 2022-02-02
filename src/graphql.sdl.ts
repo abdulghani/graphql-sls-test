@@ -15,8 +15,9 @@ type Query {
   hello: String
   searchHello(payload: SearchInput): String
   multipleInput(payload: SearchInput, name: String): String
-  getUser(id: String): String
+  sayHello(name: String): String
   getProduct(id: String): String
+  getUser(id: String): String
 }
 
 input SearchInput {
@@ -47,9 +48,9 @@ type User {
 }
 
 type Mutation {
-  addUser(id: String): String
   createProduct(id: String): String
   editProduct(id: String): String
+  addUser(id: String): String
 }
 
 schema {

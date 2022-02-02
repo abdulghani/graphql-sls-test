@@ -25,18 +25,12 @@ export interface SearchInput {
 
 export interface IQuery {
     __typename?: 'IQuery';
-    getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     hello(): Nullable<string> | Promise<Nullable<string>>;
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
     multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-}
-
-export interface IMutation {
-    __typename?: 'IMutation';
-    createProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-    editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-    addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface User {
@@ -44,6 +38,13 @@ export interface User {
     ID: string;
     name: string;
     email: string;
+}
+
+export interface IMutation {
+    __typename?: 'IMutation';
+    createProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export type UTCDateTime = any;
