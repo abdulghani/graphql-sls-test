@@ -1,3 +1,11 @@
+/*
+ * -------------------------------------------------------
+ * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * -------------------------------------------------------
+ */
+
+/* tslint:disable */
+/* eslint-disable */
 import * as graphql from "graphql";
 
 export const UTCDateTime = new graphql.GraphQLScalarType({

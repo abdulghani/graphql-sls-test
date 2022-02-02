@@ -39,6 +39,7 @@ class GraphQLSdlGenerator {
       throwOnConflict: true,
       commentDescriptions: true,
       reverseDirectives: true,
+      sort: true,
     });
   }
 

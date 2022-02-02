@@ -23,14 +23,21 @@ export interface SearchInput {
     date?: Nullable<UTCDateTime>;
 }
 
+export interface IMutation {
+    __typename?: 'IMutation';
+    addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    createProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+}
+
 export interface IQuery {
     __typename?: 'IQuery';
-    hello(): Nullable<string> | Promise<Nullable<string>>;
-    searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
-    multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-    sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    hello(): Nullable<string> | Promise<Nullable<string>>;
+    multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface User {
@@ -38,13 +45,6 @@ export interface User {
     ID: string;
     name: string;
     email: string;
-}
-
-export interface IMutation {
-    __typename?: 'IMutation';
-    createProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-    editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
-    addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export type UTCDateTime = any;
@@ -60,5 +60,5 @@ export interface IQuery {
 export interface IMutation {
 }
 
-export type IResolver = Omit<IQuery, '__typename'> & Omit<IMutation, '__typename'>;
+export type IResolver = Omit<IMutation, '__typename'> & Omit<IQuery, '__typename'>;
 type Nullable<T> = T | null;

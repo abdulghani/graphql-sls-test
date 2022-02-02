@@ -20,6 +20,14 @@ import { SourceFile, VariableDeclarationKind } from "ts-morph";
 import readFile from "./read-file";
 import writeFile from "./write-file";
 
+const FILE_HEADER = `/*
+ * -------------------------------------------------------
+ * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * -------------------------------------------------------
+ */
+
+/* tslint:disable */
+/* eslint-disable */`;
 const IMPORT_HEADER = `import * as graphql from "graphql";`
   .split("\n")
   .filter((i) => !!i)
@@ -79,7 +87,7 @@ class GraphQLObjectFactory {
     const definitions = this.getDefinitions(sdl);
 
     this.traverseDefinitions(definitions);
-    this.tsFile.insertText(0, IMPORT_HEADER);
+    this.tsFile.insertText(0, [FILE_HEADER, IMPORT_HEADER].join("\n"));
 
     // THIS HAS TO BE THE END
     await this.end(outputPath);

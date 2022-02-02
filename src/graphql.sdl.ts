@@ -8,16 +8,32 @@
   /* eslint-disable */
 
 const GRAPHQL_GENERATED_SDL = `
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+enum Enum {
+  ONE
+  TWO
+}
+
+type Mutation {
+  addUser(id: String): String
+  createProduct(id: String): String
+  editProduct(id: String): String
+}
+
 type Query {
+  getProduct(id: String): String
+  getUser(id: String): String
   """
     description for this
   """
   hello: String
-  searchHello(payload: SearchInput): String
   multipleInput(payload: SearchInput, name: String): String
   sayHello(name: String): String
-  getProduct(id: String): String
-  getUser(id: String): String
+  searchHello(payload: SearchInput): String
 }
 
 input SearchInput {
@@ -36,26 +52,10 @@ input SearchInput {
 
 scalar UTCDateTime
 
-enum Enum {
-  ONE
-  TWO
-}
-
 type User {
   ID: String!
   name: String!
   email: String!
-}
-
-type Mutation {
-  createProduct(id: String): String
-  editProduct(id: String): String
-  addUser(id: String): String
-}
-
-schema {
-  query: Query
-  mutation: Mutation
 }
 ` as const;
 
