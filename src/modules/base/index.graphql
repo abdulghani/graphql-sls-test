@@ -42,3 +42,14 @@ type User {
 }
 
 union MyUnion = String | Int | Float
+
+interface CommonUser {
+  ID: String
+  name: String
+}
+
+type MyUser implements CommonUser {
+  ID: String
+  name: String
+  addedField: String
+}

@@ -5,6 +5,7 @@ import {
   FieldDefinitionNode,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
+  InterfaceTypeDefinitionNode,
   Kind,
   NamedTypeNode,
   ObjectTypeDefinitionNode,
@@ -114,6 +115,7 @@ class GraphqlTypeFactory {
       case "InputObjectTypeExtension":
         break;
       case "InterfaceTypeDefinition":
+        return this.createInterfaceInterface(node);
       case "InterfaceTypeExtension":
         break;
       case "ScalarTypeDefinition":
@@ -129,6 +131,24 @@ class GraphqlTypeFactory {
       case "UnionTypeExtension":
         break;
     }
+  }
+
+  private createInterfaceInterface(node: InterfaceTypeDefinitionNode) {
+    const intr = this.tsFile.addInterface({
+      trailingTrivia: (w) => w.writeLine("\n"),
+      name: node.name.value,
+      isExported: true,
+      kind: this.tsMorphLib.StructureKind.Interface,
+    });
+
+    // FIELDS
+    node.fields?.forEach((item) => {
+      intr.addProperty({
+        name: item.name.value,
+        type: this.handleInputValueNode(item.type),
+        hasQuestionToken: item.type.kind !== Kind.NON_NULL_TYPE,
+      });
+    });
   }
 
   private createUnionInterface(node: UnionTypeDefinitionNode) {
@@ -150,6 +170,7 @@ class GraphqlTypeFactory {
       name: node.name.value,
       isExported: true,
       kind: this.tsMorphLib.StructureKind.Interface,
+      extends: node.interfaces?.map((item) => item.name.value) ?? [],
     });
 
     intr.addProperty({

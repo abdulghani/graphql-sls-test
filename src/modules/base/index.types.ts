@@ -21,6 +21,18 @@ export interface SearchInput {
   date?: Nullable<UTCDateTime>;
 }
 
+export interface CommonUser {
+  ID?: Nullable<string>;
+  name?: Nullable<string>;
+}
+
+export interface MyUser extends CommonUser {
+  __typename?: "MyUser";
+  ID: Nullable<string>;
+  name: Nullable<string>;
+  addedField: Nullable<string>;
+}
+
 export interface Query {
   __typename?: "Query";
   hello: Nullable<string>;
