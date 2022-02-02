@@ -1,18 +1,31 @@
-import { buildSchema, graphql } from "graphql";
-import GraphQLResolver from "src/graphql.resolver";
-import GRAPHQL_GENERATED_SDL from "src/graphql.sdl";
+import * as graphql from "graphql";
 import CreateHandler from "../utils/create-handler";
 
 const handler = CreateHandler(async (event) => {
-  const schema = buildSchema(GRAPHQL_GENERATED_SDL);
-  const resolver = new GraphQLResolver();
+  // const schema = graphql.buildSchema(GRAPHQL_GENERATED_SDL, {
+  //   assumeValidSDL: true,
+  // });
+  // const resolver = new GraphQLResolver();
 
-  const res = await graphql({
+  // Define the Query type
+  const queryType = new graphql.GraphQLObjectType({
+    name: "Query",
+    fields: {
+      hello: {
+        type: graphql.GraphQLString,
+        resolve: () => {
+          return "hello world";
+        },
+      },
+    },
+  });
+  const schema = new graphql.GraphQLSchema({ query: queryType });
+
+  const res = await graphql.graphql({
     schema,
-    rootValue: resolver,
+    // rootValue: resolver,
     source: "{ hello }",
   });
-  console.log("SCHEMA", { schema, res });
 
   return {
     statusCode: 200,

@@ -8,7 +8,8 @@
     "start": "sls offline --stage dev --httpPort 4000 --lambdaPort 4002 --apiKey serverless-offline",
     "graphql:sdl": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-sdl || echo \"NOT RUNNING IN CI ENV\"",
     "graphql:type": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-types || echo \"NOT RUNNING IN CI ENV\"",
-    "graphql:generate": "npm run graphql:sdl; npm run graphql:type",
+    "graphql:object": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-object || echo \"NOT RUNNING IN CI ENV\"",
+    "graphql:generate": "npm run graphql:sdl; npm run graphql:type; npm run graphql:object",
     "test:base": "jest --config ./.jest.config.ts --runInBand --coverage --logHeapUsage",
     "test": "npm run test:base --"
   },
@@ -29,6 +30,7 @@
     "jest": "^27.4.7",
     "jest-junit": "^13.0.0",
     "npm": "^8.4.0",
+    "prettier": "^2.5.1",
     "serverless": "^3.0.1",
     "serverless-offline": "^8.4.0",
     "serverless-prune-plugin": "^2.0.1",
@@ -45,10 +47,10 @@
     "yargs": "^17.3.1"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.13",
     "aws-lambda": "^1.0.7",
     "graphql": "^16.3.0",
     "lodash": "^4.17.21",
+    "reflect-metadata": "^0.1.13",
     "ts-transformer-keys": "^0.4.3"
   }
 }
