@@ -49,7 +49,7 @@ jobs:
           key: ${{ runner.os }}-${{ GITHUB.SHA }}-sls-build
           path: |
             ./.serverless
-      - name: install latest npm
+      - name: install latest npm (required for webpack build)
         run: |
           npm install -g npm &&
           echo "CURRENT VERSION NPM ($(npm -v)) NODE ($(node -v))"
