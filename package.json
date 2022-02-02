@@ -6,9 +6,9 @@
   "scripts": {
     "prepare": "npm run graphql:generate",
     "start": "sls offline --stage dev --httpPort 4000 --lambdaPort 4002 --websocketPort 4003 --apiKey serverless-offline",
-    "graphql:sdl": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-sdl || echo \"NOT RUNNING IN CI ENV\"",
-    "graphql:type": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-types || echo \"NOT RUNNING IN CI ENV\"",
-    "graphql:object": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./scripts/generate-object || echo \"NOT RUNNING IN CI ENV\"",
+    "graphql:sdl": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./.scripts/generate-sdl || echo \"NOT RUNNING IN CI ENV\"",
+    "graphql:type": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./.scripts/generate-types || echo \"NOT RUNNING IN CI ENV\"",
+    "graphql:object": "[ ! $CI ] && ts-node -r tsconfig-paths/register ./.scripts/generate-object || echo \"NOT RUNNING IN CI ENV\"",
     "graphql:generate": "npm run graphql:sdl; npm run graphql:type; npm run graphql:object",
     "test:base": "jest --config ./.jest.config.ts --runInBand --coverage --logHeapUsage",
     "test": "npm run test:base --"
