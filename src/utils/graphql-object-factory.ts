@@ -103,7 +103,7 @@ class GraphQLObjectFactory {
     this.tsFile.insertText(0, [FILE_HEADER, IMPORT_HEADER].join("\n"));
 
     // THIS HAS TO BE THE END
-    await this.end(outputPath);
+    return this.end(outputPath);
   }
 
   private traverseDefinitions(definitions: DefinitionNode[]) {
