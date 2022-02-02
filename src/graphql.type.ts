@@ -28,20 +28,32 @@ export interface SearchInput {
     date?: Nullable<UTCDateTime>;
 }
 
+export interface CommonUser {
+    ID?: Nullable<string>;
+    name?: Nullable<string>;
+}
+
 export interface IMutation {
     __typename?: 'IMutation';
     addUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    createHello(payload?: Nullable<CreateInput>): Nullable<string> | Promise<Nullable<string>>;
     createProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     editProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
 }
 
+export interface MyUser extends CommonUser {
+    __typename?: 'MyUser';
+    ID?: Nullable<string>;
+    name?: Nullable<string>;
+    addedField?: Nullable<string>;
+}
+
 export interface IQuery {
     __typename?: 'IQuery';
-    createHello(payload?: Nullable<CreateInput>): Nullable<string> | Promise<Nullable<string>>;
     getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     hello(): Nullable<string> | Promise<Nullable<string>>;
-    multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    multipleInput(payload?: Nullable<SearchInput>, name: string): Nullable<string> | Promise<Nullable<string>>;
     sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
 }
@@ -66,5 +78,6 @@ export interface IQuery {
 export interface IMutation {
 }
 
+export type MyUnion = MyUser | User;
 export type IResolver = Omit<IMutation, '__typename'> & Omit<IQuery, '__typename'>;
 type Nullable<T> = T | null;

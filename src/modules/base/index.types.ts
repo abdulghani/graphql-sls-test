@@ -1,4 +1,6 @@
-type Nullable<T> = T | null | undefined;
+import * as graphql from "graphql";
+
+export type Nullable<T> = T | null | undefined;
 
 export enum Enum {
   ONE = "ONE",
@@ -26,6 +28,19 @@ export interface CommonUser {
   name?: Nullable<string>;
 }
 
+export interface Mutation {
+  __typename?: "Mutation";
+  createHello(
+    args: CreateHelloArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export interface CreateHelloArgs {
+  payload?: Nullable<CreateInput>;
+}
+
 export interface MyUser extends CommonUser {
   __typename?: "MyUser";
   ID: Nullable<string>;
@@ -35,20 +50,35 @@ export interface MyUser extends CommonUser {
 
 export interface Query {
   __typename?: "Query";
-  hello: Nullable<string>;
+  hello(): Nullable<string> | Promise<Nullable<string>>;
   searchHello(
-    payload?: Nullable<SearchInput>
+    args: SearchHelloArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>>;
   multipleInput(
-    name: string,
-    payload?: Nullable<SearchInput>
+    args: MultipleInputArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>>;
   sayHello(
-    name?: Nullable<string>
+    args: SayHelloArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>>;
-  createHello(
-    payload?: Nullable<CreateInput>
-  ): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export interface SearchHelloArgs {
+  payload?: Nullable<SearchInput>;
+}
+
+export interface MultipleInputArgs {
+  name: string;
+  payload?: Nullable<SearchInput>;
+}
+
+export interface SayHelloArgs {
+  name?: Nullable<string>;
 }
 
 export interface User {
@@ -60,4 +90,6 @@ export interface User {
 
 export type UTCDateTime = any;
 
-export type MyUnion = string | number | number;
+export type MyUnion = MyUser | User;
+
+export type Resolver = Omit<Mutation, "__typename"> & Omit<Query, "__typename">;

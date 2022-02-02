@@ -38,7 +38,7 @@ export const SearchInput = new graphql.GraphQLInputObjectType({
   fields: {
     query: {
       type: new graphql.GraphQLNonNull(graphql.GraphQLString),
-      description: "description for query",
+      description: "description for search input",
       defaultValue: "hello",
     },
     string: { type: graphql.GraphQLString, defaultValue: "hello" },
@@ -58,6 +58,16 @@ export const SearchInput = new graphql.GraphQLInputObjectType({
   },
 });
 
+export const Mutation = new graphql.GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    createHello: {
+      type: graphql.GraphQLString,
+      args: { payload: { type: CreateInput } },
+    },
+  },
+});
+
 export const MyUser = new graphql.GraphQLObjectType({
   name: "MyUser",
   interfaces: [CommonUser],
@@ -70,6 +80,7 @@ export const MyUser = new graphql.GraphQLObjectType({
 
 export const Query = new graphql.GraphQLObjectType({
   name: "Query",
+  description: "description for query",
   fields: {
     hello: { type: graphql.GraphQLString, description: "description for this" },
     searchHello: {
@@ -86,10 +97,6 @@ export const Query = new graphql.GraphQLObjectType({
     sayHello: {
       type: graphql.GraphQLString,
       args: { name: { type: graphql.GraphQLString } },
-    },
-    createHello: {
-      type: graphql.GraphQLString,
-      args: { payload: { type: CreateInput } },
     },
   },
 });

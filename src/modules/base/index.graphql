@@ -1,3 +1,6 @@
+"""
+description for query
+"""
 type Query {
   """
   description for this
@@ -6,12 +9,15 @@ type Query {
   searchHello(payload: SearchInput): String
   multipleInput(payload: SearchInput, name: String!): String
   sayHello(name: String): String
+}
+
+type Mutation {
   createHello(payload: CreateInput): String
 }
 
 input SearchInput {
   """
-  description for query
+  description for search input
   """
   query: String! = "hello"
   string: String = "hello"

@@ -28,12 +28,21 @@ export interface CreateInput {
     email?: Nullable<string>;
 }
 
+export interface CommonUser {
+    ID?: Nullable<string>;
+    name?: Nullable<string>;
+}
+
 export interface BaseQuery {
     __typename?: 'BaseQuery';
     hello(): Nullable<string> | Promise<Nullable<string>>;
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
-    multipleInput(payload?: Nullable<SearchInput>, name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    multipleInput(payload?: Nullable<SearchInput>, name: string): Nullable<string> | Promise<Nullable<string>>;
     sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export interface BaseMutation {
+    __typename?: 'BaseMutation';
     createHello(payload?: Nullable<CreateInput>): Nullable<string> | Promise<Nullable<string>>;
 }
 
@@ -44,6 +53,14 @@ export interface User {
     email: string;
 }
 
+export interface MyUser extends CommonUser {
+    __typename?: 'MyUser';
+    ID?: Nullable<string>;
+    name?: Nullable<string>;
+    addedField?: Nullable<string>;
+}
+
 export type UTCDateTime = any;
-export type BaseResolver = Omit<BaseQuery, '__typename'>;
+export type MyUnion = MyUser | User;
+export type BaseResolver = Omit<BaseQuery, '__typename'> & Omit<BaseMutation, '__typename'>;
 type Nullable<T> = T | null;

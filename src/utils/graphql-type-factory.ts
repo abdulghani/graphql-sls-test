@@ -16,7 +16,12 @@ import {
 import lodash from "lodash";
 import path from "path";
 import prettier from "prettier";
-import { InterfaceDeclaration, SourceFile } from "ts-morph";
+import {
+  InterfaceDeclaration,
+  OptionalKind,
+  ParameterDeclarationStructure,
+  SourceFile,
+} from "ts-morph";
 import readFile from "./read-file";
 import writeFile from "./write-file";
 
@@ -35,9 +40,14 @@ class GraphqlTypeFactory {
     this.tsFile.addTypeAlias({
       name: "Nullable",
       typeParameters: ["T"],
-      isExported: false,
+      isExported: true,
       type: `T | null | undefined`,
     });
+  }
+
+  private addHeader() {
+    const GRAPHQL_IMPORT_HEADER = `import * as graphql from "graphql";`;
+    this.tsFile.insertText(0, [GRAPHQL_IMPORT_HEADER].join("\n"));
   }
 
   private async createFile(config: GeneratorOptions) {
@@ -53,6 +63,7 @@ class GraphqlTypeFactory {
     this.tsFile = project.createSourceFile(this.config.outputPath, "", {
       overwrite: true,
     });
+    this.addHeader();
     this.addNullable();
 
     return this.tsFile;
@@ -90,9 +101,26 @@ class GraphqlTypeFactory {
     const tsFile = await this.createFile(config);
     const definitions = this.getDefinitions(sdl);
     this.traverseDefinitions(definitions);
+    this.addResolverType();
 
     // THIS HAS TO BE THE END
     return this.end();
+  }
+
+  private addResolverType() {
+    const list = ["query", "mutation"];
+    const resolvedTypes = this.typeList
+      .filter((item) => list.includes(item?.toLowerCase?.()))
+      ?.map((item) => `Omit<${item}, "__typename">`);
+
+    if (resolvedTypes.length) {
+      this.tsFile.addTypeAlias({
+        name: "Resolver",
+        leadingTrivia: (w) => w.writeLine("\n"),
+        isExported: true,
+        type: resolvedTypes.join(" & "),
+      });
+    }
   }
 
   private traverseDefinitions(defs: DefinitionNode[]) {
@@ -194,25 +222,66 @@ class GraphqlTypeFactory {
       );
   }
 
+  private addMethodArg(
+    nodes: InputValueDefinitionNode[],
+    parent: FieldDefinitionNode
+  ) {
+    const argIntr = this.tsFile.addInterface({
+      name: lodash.upperFirst(lodash.camelCase(`${parent.name.value} Args`)),
+      isExported: true,
+      kind: this.tsMorphLib.StructureKind.Interface,
+    });
+
+    nodes.forEach((item) => {
+      argIntr.addProperty({
+        name: item.name.value,
+        type: this.handleInputValueNode(item.type),
+        hasQuestionToken: item.type.kind !== Kind.NON_NULL_TYPE,
+      });
+    });
+
+    return argIntr;
+  }
+
   private addObjectMember(
     node: FieldDefinitionNode,
     parent: InterfaceDeclaration
   ) {
     if (node.arguments?.length) {
       const sorted = this.sortMethodArguments(node.arguments);
+      const argIntr = this.addMethodArg(sorted, node);
+
+      // RESOLVER ARG, CONTEXT, INFO
+      const resolverArgs: OptionalKind<ParameterDeclarationStructure>[] = [
+        { name: "args", type: argIntr.getName(), hasQuestionToken: false },
+        { name: "context", type: "any", hasQuestionToken: false },
+        {
+          name: "info",
+          type: "graphql.GraphQLResolveInfo",
+          hasQuestionToken: false,
+        },
+      ];
+
       return parent.addMethod({
         name: node.name.value,
-        parameters: sorted.map((item) => ({
-          name: item.name.value,
-          type: this.handleInputValueNode(item.type),
-          hasQuestionToken: item.type.kind !== Kind.NON_NULL_TYPE,
-        })),
+        parameters: resolverArgs,
+        hasQuestionToken: false,
+        returnType: this.handleInputValueNode(node.type, { promise: true }),
+      });
+
+      // HANDLE QUERY/MUTATION METHODS ALL RESOLVER
+    } else if (["query", "mutation"].includes(parent.getName().toLowerCase())) {
+      return parent.addMethod({
+        name: node.name.value,
+        hasQuestionToken: false,
+        parameters: [],
         returnType: this.handleInputValueNode(node.type, { promise: true }),
       });
     }
     return parent.addProperty({
       name: node.name.value,
       type: this.handleInputValueNode(node.type),
+      hasQuestionToken: false,
     });
   }
 
