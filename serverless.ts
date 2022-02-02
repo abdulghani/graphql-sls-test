@@ -75,13 +75,19 @@ const config: AWS = {
       events: [
         {
           http: {
-            method: "get",
+            method: "post",
             path: "/graphql",
           },
         },
+      ],
+    },
+    "graphql-playground": {
+      handler: "./src/handlers/graphql-playground.default",
+      memorySize: 128,
+      events: [
         {
           http: {
-            method: "post",
+            method: "get",
             path: "/graphql",
           },
         },

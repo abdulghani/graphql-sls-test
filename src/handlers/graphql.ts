@@ -1,27 +1,25 @@
 import * as graphql from "graphql";
+import bigjson from "json-bigint";
 import HelloResolver from "src/modules/base/hello.resolver";
 import { Query } from "src/modules/base/index.object";
 import CreateHandler from "../utils/create-handler";
 
 const handler = CreateHandler(async (event) => {
-  // const schema = graphql.buildSchema(GRAPHQL_GENERATED_SDL, {
-  //   assumeValidSDL: true,
-  // });
+  const { operationName, variables, query } = bigjson.parse(event.body ?? "{}");
   const resolver = new HelloResolver();
   const schema = new graphql.GraphQLSchema({ query: Query });
 
   const res = await graphql.graphql({
     schema,
     rootValue: resolver,
-    source: '{ sayHello(name: "Ghani") }',
+    source: query,
+    operationName,
+    variableValues: variables,
   });
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      message: "hello world",
-      res,
-    }),
+    body: bigjson.stringify(res),
   };
 });
 
