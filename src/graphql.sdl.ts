@@ -50,6 +50,7 @@ type MyUser implements CommonUser {
   description for query
 """
 type Query {
+  aHello: String
   getProduct(id: String): String
   getUser(id: String): String
   """

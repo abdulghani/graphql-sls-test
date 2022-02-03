@@ -39,6 +39,7 @@ export interface BaseQuery {
     searchHello(payload?: Nullable<SearchInput>): Nullable<string> | Promise<Nullable<string>>;
     multipleInput(payload?: Nullable<SearchInput>, name: string): Nullable<string> | Promise<Nullable<string>>;
     sayHello(name?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
+    aHello(): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface BaseMutation {

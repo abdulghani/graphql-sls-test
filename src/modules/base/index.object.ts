@@ -98,6 +98,7 @@ export const Query = new graphql.GraphQLObjectType({
       type: graphql.GraphQLString,
       args: { name: { type: graphql.GraphQLString } },
     },
+    aHello: { type: graphql.GraphQLString },
   },
 });
 

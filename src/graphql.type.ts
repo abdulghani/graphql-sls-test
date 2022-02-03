@@ -50,6 +50,7 @@ export interface MyUser extends CommonUser {
 
 export interface IQuery {
     __typename?: 'IQuery';
+    aHello(): Nullable<string> | Promise<Nullable<string>>;
     getProduct(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     getUser(id?: Nullable<string>): Nullable<string> | Promise<Nullable<string>>;
     hello(): Nullable<string> | Promise<Nullable<string>>;
