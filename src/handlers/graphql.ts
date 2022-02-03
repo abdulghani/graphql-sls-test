@@ -1,7 +1,7 @@
 import * as graphql from "graphql";
-import bigjson from "json-bigint";
 import { Query } from "src/modules/base/index.object";
 import BaseResolver from "src/modules/base/index.resolver";
+import bigjson from "src/utils/big-json";
 import CreateHandler from "../utils/create-handler";
 
 const handler = CreateHandler(async (event) => {

@@ -9,15 +9,18 @@ import {
 } from "./index.types";
 
 class BaseResolver implements Resolver {
+  aHello(): Nullable<string> | Promise<Nullable<string>> {
+    throw new Error("Method not implemented.");
+  }
   createHello(
     args: CreateHelloArgs,
     context: any,
     info: GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>> {
-    throw new Error("Method not implemented.");
+    return "hello world";
   }
   hello(): Nullable<string> | Promise<Nullable<string>> {
-    throw new Error("Method not implemented.");
+    return "hello world";
   }
   searchHello(
     args: SearchHelloArgs,

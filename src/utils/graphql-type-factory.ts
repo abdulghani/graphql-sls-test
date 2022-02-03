@@ -206,7 +206,8 @@ class GraphqlTypeFactory {
       type: `"${node.name.value}"`,
       hasQuestionToken: true,
     });
-    node.fields?.forEach((item) => {
+    const sortedMember = lodash.sortBy(node.fields ?? [], ["name.value"]);
+    sortedMember?.forEach((item) => {
       this.addObjectMember(item, intr);
     });
   }

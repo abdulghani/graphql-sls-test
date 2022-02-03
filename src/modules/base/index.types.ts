@@ -44,18 +44,14 @@ export interface CreateHelloArgs {
 export interface MyUser extends CommonUser {
   __typename?: "MyUser";
   ID: Nullable<string>;
-  name: Nullable<string>;
   addedField: Nullable<string>;
+  name: Nullable<string>;
 }
 
 export interface Query {
   __typename?: "Query";
+  aHello(): Nullable<string> | Promise<Nullable<string>>;
   hello(): Nullable<string> | Promise<Nullable<string>>;
-  searchHello(
-    args: SearchHelloArgs,
-    context: any,
-    info: graphql.GraphQLResolveInfo
-  ): Nullable<string> | Promise<Nullable<string>>;
   multipleInput(
     args: MultipleInputArgs,
     context: any,
@@ -66,10 +62,11 @@ export interface Query {
     context: any,
     info: graphql.GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>>;
-}
-
-export interface SearchHelloArgs {
-  payload?: Nullable<SearchInput>;
+  searchHello(
+    args: SearchHelloArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export interface MultipleInputArgs {
@@ -81,11 +78,15 @@ export interface SayHelloArgs {
   name?: Nullable<string>;
 }
 
+export interface SearchHelloArgs {
+  payload?: Nullable<SearchInput>;
+}
+
 export interface User {
   __typename?: "User";
   ID: string;
-  name: string;
   email: string;
+  name: string;
 }
 
 export type UTCDateTime = any;
