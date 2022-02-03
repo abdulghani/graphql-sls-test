@@ -3,6 +3,23 @@ import dotenv from "dotenv";
 
 const env = dotenv.config();
 
+function addPlayground(config: AWS) {
+  if (!process.env.CI && config.functions) {
+    config.functions["graphql-playground"] = {
+      handler: "./src/handlers/graphql-playground.default",
+      memorySize: 128,
+      events: [
+        {
+          http: {
+            method: "get",
+            path: "/graphql",
+          },
+        },
+      ],
+    };
+  }
+}
+
 const config: AWS = {
   service: "graphqljs-test",
   frameworkVersion: "3",
@@ -81,19 +98,8 @@ const config: AWS = {
         },
       ],
     },
-    "graphql-playground": {
-      handler: "./src/handlers/graphql-playground.default",
-      memorySize: 128,
-      events: [
-        {
-          http: {
-            method: "get",
-            path: "/graphql",
-          },
-        },
-      ],
-    },
   },
 };
 
+addPlayground(config);
 module.exports = config;
