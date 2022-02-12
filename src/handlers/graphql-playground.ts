@@ -6,11 +6,8 @@ const handler = lambdaPlayground({
     "editor.cursorShape": "block",
     "editor.theme": "dark",
     "schema.polling.enable": false,
+    "general.betaUpdates": true,
   },
-  codeTheme: {
-    editorBackground: "#000",
-    resultBackground: "#0b0b0b",
-  } as any,
 });
 
 export default handler;
