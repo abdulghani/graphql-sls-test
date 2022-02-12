@@ -36,6 +36,16 @@ type MyUser implements CommonUser {
   addedField: String
 }
 
+input PaginationInput {
+  cursor: String
+  limit: Int
+}
+
+input ParamInput {
+  name: String
+  email: String
+}
+
 """
 description for query
 """
@@ -53,17 +63,8 @@ type Query {
 }
 
 input SearchInput {
-  """
-  description for search input
-  """
-  query: String! = "hello"
-  string: String = "hello"
-  number: Int = 10
-  float: Float = 10.026
-  isTrue: Boolean = false
-  enum: Enum! = ONE
-  listString: [String!]! = ["hello"]
-  date: UTCDateTime
+  pagination: PaginationInput
+  param: ParamInput
 }
 
 scalar UTCDateTime

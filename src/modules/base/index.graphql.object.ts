@@ -52,28 +52,27 @@ export const CreateInput = new graphql.GraphQLInputObjectType({
   },
 });
 
+export const PaginationInput = new graphql.GraphQLInputObjectType({
+  name: "PaginationInput",
+  fields: {
+    cursor: { type: graphql.GraphQLString },
+    limit: { type: graphql.GraphQLInt },
+  },
+});
+
+export const ParamInput = new graphql.GraphQLInputObjectType({
+  name: "ParamInput",
+  fields: {
+    name: { type: graphql.GraphQLString },
+    email: { type: graphql.GraphQLString },
+  },
+});
+
 export const SearchInput = new graphql.GraphQLInputObjectType({
   name: "SearchInput",
   fields: {
-    query: {
-      type: new graphql.GraphQLNonNull(graphql.GraphQLString),
-      description: "description for search input",
-      defaultValue: "hello",
-    },
-    string: { type: graphql.GraphQLString, defaultValue: "hello" },
-    number: { type: graphql.GraphQLInt, defaultValue: 10 },
-    float: { type: graphql.GraphQLFloat, defaultValue: 10.026 },
-    isTrue: { type: graphql.GraphQLBoolean, defaultValue: false },
-    enum: { type: new graphql.GraphQLNonNull(Enum), defaultValue: "ONE" },
-    listString: {
-      type: new graphql.GraphQLNonNull(
-        new graphql.GraphQLList(
-          new graphql.GraphQLNonNull(graphql.GraphQLString)
-        )
-      ),
-      defaultValue: ["hello"],
-    },
-    date: { type: UTCDateTime },
+    pagination: { type: PaginationInput },
+    param: { type: ParamInput },
   },
 });
 

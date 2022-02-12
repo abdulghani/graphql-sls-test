@@ -12,15 +12,19 @@ export interface CreateInput {
   email?: Nullable<string>;
 }
 
+export interface PaginationInput {
+  cursor?: Nullable<string>;
+  limit?: Nullable<number>;
+}
+
+export interface ParamInput {
+  name?: Nullable<string>;
+  email?: Nullable<string>;
+}
+
 export interface SearchInput {
-  query: string;
-  string?: Nullable<string>;
-  number?: Nullable<number>;
-  float?: Nullable<number>;
-  isTrue?: Nullable<boolean>;
-  enum: Enum;
-  listString: Array<string>;
-  date?: Nullable<UTCDateTime>;
+  pagination?: Nullable<PaginationInput>;
+  param?: Nullable<ParamInput>;
 }
 
 export interface CommonUser {

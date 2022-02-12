@@ -16,19 +16,34 @@ type Mutation {
   createHello(payload: CreateInput): String
 }
 
-input SearchInput {
-  """
-  description for search input
-  """
-  query: String! = "hello"
-  string: String = "hello"
-  number: Int = 10
-  float: Float = 10.026
-  isTrue: Boolean = false
-  enum: Enum! = ONE
-  listString: [String!]! = ["hello"]
-  date: UTCDateTime
+input PaginationInput {
+  cursor: String
+  limit: Int
 }
+
+input ParamInput {
+  name: String
+  email: String
+}
+
+input SearchInput {
+  pagination: PaginationInput
+  param: ParamInput
+}
+
+# input SearchInput {
+#   """
+#   description for search input
+#   """
+#   query: String! = "hello"
+#   string: String = "hello"
+#   number: Int = 10
+#   float: Float = 10.026
+#   isTrue: Boolean = false
+#   enum: Enum! = ONE
+#   listString: [String!]! = ["hello"]
+#   date: UTCDateTime
+# }
 
 input CreateInput {
   name: String
