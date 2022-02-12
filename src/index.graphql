@@ -1,13 +1,3 @@
-/*
-   * -------------------------------------------------------
-   * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
-   * -------------------------------------------------------
-   */
-  
-  /* tslint:disable */
-  /* eslint-disable */
-
-const GRAPHQL_GENERATED_SDL = `
 schema {
   query: Query
   mutation: Mutation
@@ -36,7 +26,7 @@ type Mutation {
 }
 
 """
-  describe union
+describe union
 """
 union MyUnion = MyUser | User
 
@@ -47,14 +37,14 @@ type MyUser implements CommonUser {
 }
 
 """
-  description for query
+description for query
 """
 type Query {
-  aHello: String
+  aHello: MyUser
   getProduct(id: String): String
   getUser(id: String): String
   """
-    description for this
+  description for this
   """
   hello: String
   multipleInput(payload: SearchInput, name: String!): String
@@ -64,7 +54,7 @@ type Query {
 
 input SearchInput {
   """
-    description for search input
+  description for search input
   """
   query: String! = "hello"
   string: String = "hello"
@@ -83,6 +73,3 @@ type User {
   name: String!
   email: String!
 }
-` as const;
-
-export default GRAPHQL_GENERATED_SDL;

@@ -1,6 +1,6 @@
 import * as graphql from "graphql";
-import { Query } from "src/modules/base/index.object";
-import BaseResolver from "src/modules/base/index.resolver";
+import { Query } from "src/index.graphql.object";
+import BaseResolver from "src/index.resolver";
 import bigjson from "src/utils/big-json";
 import CreateHandler from "../utils/create-handler";
 

@@ -30,15 +30,42 @@ export interface CommonUser {
 
 export interface Mutation {
   __typename?: "Mutation";
+  addUser(
+    args: AddUserArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
   createHello(
     args: CreateHelloArgs,
     context: any,
     info: graphql.GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>>;
+  createProduct(
+    args: CreateProductArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
+  editProduct(
+    args: EditProductArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export interface AddUserArgs {
+  id?: Nullable<string>;
 }
 
 export interface CreateHelloArgs {
   payload?: Nullable<CreateInput>;
+}
+
+export interface CreateProductArgs {
+  id?: Nullable<string>;
+}
+
+export interface EditProductArgs {
+  id?: Nullable<string>;
 }
 
 export interface MyUser extends CommonUser {
@@ -50,7 +77,17 @@ export interface MyUser extends CommonUser {
 
 export interface Query {
   __typename?: "Query";
-  aHello(): Nullable<string> | Promise<Nullable<string>>;
+  aHello(): Nullable<MyUser> | Promise<Nullable<MyUser>>;
+  getProduct(
+    args: GetProductArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
+  getUser(
+    args: GetUserArgs,
+    context: any,
+    info: graphql.GraphQLResolveInfo
+  ): Nullable<string> | Promise<Nullable<string>>;
   hello(): Nullable<string> | Promise<Nullable<string>>;
   multipleInput(
     args: MultipleInputArgs,
@@ -67,6 +104,14 @@ export interface Query {
     context: any,
     info: graphql.GraphQLResolveInfo
   ): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export interface GetProductArgs {
+  id?: Nullable<string>;
+}
+
+export interface GetUserArgs {
+  id?: Nullable<string>;
 }
 
 export interface MultipleInputArgs {

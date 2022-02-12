@@ -8,6 +8,15 @@
 /* eslint-disable */
 import * as graphql from "graphql";
 
+export const UTCDateTime = new graphql.GraphQLScalarType({
+  name: "UTCDateTime",
+});
+
+export const Enum = new graphql.GraphQLEnumType({
+  name: "Enum",
+  values: { ONE: { value: "ONE" }, TWO: { value: "TWO" } },
+});
+
 export const CommonUser = new graphql.GraphQLInterfaceType({
   name: "CommonUser",
   fields: {
@@ -16,13 +25,23 @@ export const CommonUser = new graphql.GraphQLInterfaceType({
   },
 });
 
-export const UTCDateTime = new graphql.GraphQLScalarType({
-  name: "UTCDateTime",
+export const MyUser = new graphql.GraphQLObjectType({
+  name: "MyUser",
+  interfaces: [CommonUser],
+  fields: {
+    ID: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString },
+    addedField: { type: graphql.GraphQLString },
+  },
 });
 
-export const Enum = new graphql.GraphQLEnumType({
-  name: "Enum",
-  values: { ONE: { value: "ONE" }, TWO: { value: "TWO" } },
+export const User = new graphql.GraphQLObjectType({
+  name: "User",
+  fields: {
+    ID: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
+    name: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
+    email: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
+  },
 });
 
 export const CreateInput = new graphql.GraphQLInputObjectType({
@@ -58,6 +77,12 @@ export const SearchInput = new graphql.GraphQLInputObjectType({
   },
 });
 
+export const MyUnion = new graphql.GraphQLUnionType({
+  name: "MyUnion",
+  description: "describe union",
+  types: [MyUser, User],
+});
+
 export const Mutation = new graphql.GraphQLObjectType({
   name: "Mutation",
   fields: {
@@ -65,16 +90,6 @@ export const Mutation = new graphql.GraphQLObjectType({
       type: graphql.GraphQLString,
       args: { payload: { type: CreateInput } },
     },
-  },
-});
-
-export const MyUser = new graphql.GraphQLObjectType({
-  name: "MyUser",
-  interfaces: [CommonUser],
-  fields: {
-    ID: { type: graphql.GraphQLString },
-    name: { type: graphql.GraphQLString },
-    addedField: { type: graphql.GraphQLString },
   },
 });
 
@@ -98,21 +113,6 @@ export const Query = new graphql.GraphQLObjectType({
       type: graphql.GraphQLString,
       args: { name: { type: graphql.GraphQLString } },
     },
-    aHello: { type: graphql.GraphQLString },
+    aHello: { type: MyUser },
   },
-});
-
-export const User = new graphql.GraphQLObjectType({
-  name: "User",
-  fields: {
-    ID: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
-    name: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
-    email: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
-  },
-});
-
-export const MyUnion = new graphql.GraphQLUnionType({
-  name: "MyUnion",
-  description: "describe union",
-  types: [MyUser, User],
 });

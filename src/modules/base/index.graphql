@@ -9,7 +9,7 @@ type Query {
   searchHello(payload: SearchInput): String
   multipleInput(payload: SearchInput, name: String!): String
   sayHello(name: String): String
-  aHello: String
+  aHello: MyUser
 }
 
 type Mutation {
