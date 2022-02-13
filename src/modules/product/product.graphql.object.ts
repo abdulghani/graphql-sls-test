@@ -8,6 +8,15 @@
 /* eslint-disable */
 import * as graphql from "graphql";
 
+export const Product = new graphql.GraphQLObjectType({
+  name: "Product",
+  fields: {
+    id: { type: graphql.GraphQLString },
+    title: { type: graphql.GraphQLString },
+    description: { type: graphql.GraphQLString },
+  },
+});
+
 export const Mutation = new graphql.GraphQLObjectType({
   name: "Mutation",
   fields: {
@@ -26,8 +35,9 @@ export const Query = new graphql.GraphQLObjectType({
   name: "Query",
   fields: {
     getProduct: {
-      type: graphql.GraphQLString,
+      type: Product,
       args: { id: { type: graphql.GraphQLString } },
     },
+    searchProduct: { type: new graphql.GraphQLList(Product) },
   },
 });

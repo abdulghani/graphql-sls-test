@@ -24,13 +24,21 @@ export interface EditProductArgs {
   id?: Nullable<string>;
 }
 
+export interface Product {
+  __typename?: "Product";
+  description: Nullable<string>;
+  id: Nullable<string>;
+  title: Nullable<string>;
+}
+
 export interface Query {
   __typename?: "Query";
   getProduct(
     args: GetProductArgs,
     context: any,
     info: graphql.GraphQLResolveInfo
-  ): Nullable<string> | Promise<Nullable<string>>;
+  ): Nullable<Product> | Promise<Nullable<Product>>;
+  searchProduct(): Array<Nullable<Product>> | Promise<Array<Nullable<Product>>>;
 }
 
 export interface GetProductArgs {

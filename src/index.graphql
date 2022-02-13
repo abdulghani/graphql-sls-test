@@ -3,74 +3,48 @@ schema {
   mutation: Mutation
 }
 
-interface CommonUser {
-  ID: String
-  name: String
-}
-
-input CreateInput {
+input AddUserInput {
   name: String
   email: String
 }
 
-enum Enum {
-  ONE
-  TWO
-}
-
 type Mutation {
-  addUser(id: String): String
-  createHello(payload: CreateInput): String
+  addUser(payload: AddUserInput): User
   createProduct(id: String): String
   editProduct(id: String): String
 }
 
-"""
-describe union
-"""
-union MyUnion = MyUser | User
-
-type MyUser implements CommonUser {
-  ID: String
-  name: String
-  addedField: String
-}
-
-input PaginationInput {
-  cursor: String
-  limit: Int
-}
-
-input ParamInput {
-  name: String
-  email: String
+type Product {
+  id: String
+  title: String
+  description: String
 }
 
 """
 description for query
 """
 type Query {
-  aHello: MyUser
-  getProduct(id: String): String
-  getUser(id: String): String
+  getProduct(id: String): Product
+  getUser(id: String): User
   """
-  description for this
+  say hello
   """
   hello: String
-  multipleInput(payload: SearchInput, name: String!): String
-  sayHello(name: String): String
-  searchHello(payload: SearchInput): String
+  """
+  say hello with a name
+  """
+  sayHello(name: String!): String
+  searchProduct: [Product]
+  searchUser: [User]
 }
 
-input SearchInput {
-  pagination: PaginationInput
-  param: ParamInput
+type User implements UserBase {
+  id: String
+  name: String
+  email: String
 }
 
-scalar UTCDateTime
-
-type User {
-  ID: String!
-  name: String!
-  email: String!
+interface UserBase {
+  name: String
+  email: String
 }

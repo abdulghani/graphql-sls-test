@@ -3,78 +3,11 @@ description for query
 """
 type Query {
   """
-  description for this
+  say hello
   """
   hello: String
-  searchHello(payload: SearchInput): String
-  multipleInput(payload: SearchInput, name: String!): String
-  sayHello(name: String): String
-  aHello: MyUser
-}
-
-type Mutation {
-  createHello(payload: CreateInput): String
-}
-
-input PaginationInput {
-  cursor: String
-  limit: Int
-}
-
-input ParamInput {
-  name: String
-  email: String
-}
-
-input SearchInput {
-  pagination: PaginationInput
-  param: ParamInput
-}
-
-# input SearchInput {
-#   """
-#   description for search input
-#   """
-#   query: String! = "hello"
-#   string: String = "hello"
-#   number: Int = 10
-#   float: Float = 10.026
-#   isTrue: Boolean = false
-#   enum: Enum! = ONE
-#   listString: [String!]! = ["hello"]
-#   date: UTCDateTime
-# }
-
-input CreateInput {
-  name: String
-  email: String
-}
-
-scalar UTCDateTime
-
-enum Enum {
-  ONE
-  TWO
-}
-
-type User {
-  ID: String!
-  name: String!
-  email: String!
-}
-
-"""
-describe union
-"""
-union MyUnion = MyUser | User
-
-interface CommonUser {
-  ID: String
-  name: String
-}
-
-type MyUser implements CommonUser {
-  ID: String
-  name: String
-  addedField: String
+  """
+  say hello with a name
+  """
+  sayHello(name: String!): String
 }
