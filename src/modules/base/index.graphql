@@ -10,15 +10,16 @@ type Query {
   say hello with a name
   """
   sayHello(name: String!): String
+  """
+  say hello with an object
+  """
   sayHelloObj(name: String!): SayHelloObjRes
-}
-
-type UUser {
-  name: String
-  email: String
+  """
+  say hello with array result
+  """
+  sayHelloArr(name: String!): [SayHelloObjRes]
 }
 
 type SayHelloObjRes {
   name: String
-  user: UUser
 }

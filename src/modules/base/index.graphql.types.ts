@@ -1,6 +1,7 @@
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * npm i -D @adgstudio/graphql-generator (version 0.1.18)
  * -------------------------------------------------------
  */
 
@@ -29,16 +30,9 @@ export type Resolvable<TSource, TResult, TArgs = {}> =
   | TResult
   | GraphqlFieldResolver<TSource, TArgs, TResult>;
 
-export interface UUser {
-  __typename?: "UUser";
-  email?: Nullable<string>;
-  name?: Nullable<string>;
-}
-
 export interface SayHelloObjRes {
   __typename?: "SayHelloObjRes";
   name?: Nullable<string>;
-  user?: Resolvable<this, Nullable<UUser>>;
 }
 
 export interface Query {
@@ -50,6 +44,14 @@ export interface Query {
     context,
     info,
   }: GraphqlResolverArgs<this, SayHelloArgs>): Promisable<Nullable<string>>;
+  sayHelloArr({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<this, SayHelloArrArgs>): Promisable<
+    Array<Nullable<SayHelloObjRes>>
+  >;
   sayHelloObj({
     source,
     args,
@@ -61,6 +63,10 @@ export interface Query {
 }
 
 export interface SayHelloArgs {
+  name: string;
+}
+
+export interface SayHelloArrArgs {
   name: string;
 }
 

@@ -1,37 +1,18 @@
 #
 # -------------------------------------------------------
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# npm i -D @adgstudio/graphql-generator (version 0.1.18)
 # -------------------------------------------------------
 #
 
 schema {
   query: Query
-  mutation: Mutation
-}
-
-input AddUserInput {
-  name: String
-  email: String
-}
-
-type Mutation {
-  addUser(payload: AddUserInput): User
-  createProduct(id: String): String
-  editProduct(id: String): String
-}
-
-type Product {
-  id: String
-  title: String
-  description: String
 }
 
 """
 description for query
 """
 type Query {
-  getProduct(id: String): Product
-  getUser(id: String): User
   """
   say hello
   """
@@ -40,28 +21,16 @@ type Query {
   say hello with a name
   """
   sayHello(name: String!): String
+  """
+  say hello with an object
+  """
   sayHelloObj(name: String!): SayHelloObjRes
-  searchProduct: [Product]
-  searchUser: [User]
+  """
+  say hello with array result
+  """
+  sayHelloArr(name: String!): [SayHelloObjRes]
 }
 
 type SayHelloObjRes {
   name: String
-  user: UUser
-}
-
-type UUser {
-  name: String
-  email: String
-}
-
-type User implements UserBase {
-  id: String
-  name: String
-  email: String
-}
-
-interface UserBase {
-  name: String
-  email: String
 }

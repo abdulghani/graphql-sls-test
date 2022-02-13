@@ -1,6 +1,7 @@
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+ * npm i -D @adgstudio/graphql-generator (version 0.1.18)
  * -------------------------------------------------------
  */
 
@@ -9,17 +10,9 @@
 
 import * as graphql from "graphql";
 
-export const UUser = new graphql.GraphQLObjectType({
-  name: "UUser",
-  fields: {
-    name: { type: graphql.GraphQLString },
-    email: { type: graphql.GraphQLString },
-  },
-});
-
 export const SayHelloObjRes = new graphql.GraphQLObjectType({
   name: "SayHelloObjRes",
-  fields: { name: { type: graphql.GraphQLString }, user: { type: UUser } },
+  fields: { name: { type: graphql.GraphQLString } },
 });
 
 export const Query = new graphql.GraphQLObjectType({
@@ -36,6 +29,14 @@ export const Query = new graphql.GraphQLObjectType({
     },
     sayHelloObj: {
       type: SayHelloObjRes,
+      description: "say hello with an object",
+      args: {
+        name: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
+      },
+    },
+    sayHelloArr: {
+      type: new graphql.GraphQLList(SayHelloObjRes),
+      description: "say hello with array result",
       args: {
         name: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
       },
