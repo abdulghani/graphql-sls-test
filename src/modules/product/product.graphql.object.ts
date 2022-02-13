@@ -6,6 +6,7 @@
 
 /* tslint:disable */
 /* eslint-disable */
+
 import * as graphql from "graphql";
 
 export const Product = new graphql.GraphQLObjectType({
@@ -14,6 +15,17 @@ export const Product = new graphql.GraphQLObjectType({
     id: { type: graphql.GraphQLString },
     title: { type: graphql.GraphQLString },
     description: { type: graphql.GraphQLString },
+  },
+});
+
+export const Query = new graphql.GraphQLObjectType({
+  name: "Query",
+  fields: {
+    getProduct: {
+      type: Product,
+      args: { id: { type: graphql.GraphQLString } },
+    },
+    searchProduct: { type: new graphql.GraphQLList(Product) },
   },
 });
 
@@ -28,16 +40,5 @@ export const Mutation = new graphql.GraphQLObjectType({
       type: graphql.GraphQLString,
       args: { id: { type: graphql.GraphQLString } },
     },
-  },
-});
-
-export const Query = new graphql.GraphQLObjectType({
-  name: "Query",
-  fields: {
-    getProduct: {
-      type: Product,
-      args: { id: { type: graphql.GraphQLString } },
-    },
-    searchProduct: { type: new graphql.GraphQLList(Product) },
   },
 });

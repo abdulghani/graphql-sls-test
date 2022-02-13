@@ -1,3 +1,4 @@
+import { FieldResolver } from "@adgstudio/graphql-generator/dist/utils";
 import * as graphql from "graphql";
 import { Mutation, Query } from "src/index.graphql.object";
 import Resolver from "src/index.resolver";
@@ -14,10 +15,11 @@ const handler = CreateHandler(async (event) => {
 
   const res = await graphql.graphql({
     schema,
-    rootValue: resolver,
     source: query,
-    operationName,
+    rootValue: resolver,
+    operationName: operationName,
     variableValues: variables,
+    fieldResolver: FieldResolver,
   });
 
   return {

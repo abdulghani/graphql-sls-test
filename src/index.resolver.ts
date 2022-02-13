@@ -1,67 +1,102 @@
-import { GraphQLResolveInfo } from "graphql";
 import {
   AddUserArgs,
   CreateProductArgs,
   EditProductArgs,
   GetProductArgs,
   GetUserArgs,
+  GraphqlResolverArgs,
+  Mutation,
   Nullable,
   Product,
+  Promisable,
+  Query,
   Resolver as _Resolver,
   SayHelloArgs,
+  SayHelloObjArgs,
+  SayHelloObjRes,
   User,
 } from "./index.graphql.types";
 
 class Resolver implements _Resolver {
-  addUser(
-    args: AddUserArgs,
-    context: any,
-    info: GraphQLResolveInfo
-  ): Nullable<User> | Promise<Nullable<User>> {
+  addUser({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Mutation, AddUserArgs>): Promisable<Nullable<User>> {
     throw new Error("Method not implemented.");
   }
-  createProduct(
-    args: CreateProductArgs,
-    context: any,
-    info: GraphQLResolveInfo
-  ): Nullable<string> | Promise<Nullable<string>> {
+  createProduct({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Mutation, CreateProductArgs>): Promisable<
+    Nullable<string>
+  > {
     throw new Error("Method not implemented.");
   }
-  editProduct(
-    args: EditProductArgs,
-    context: any,
-    info: GraphQLResolveInfo
-  ): Nullable<string> | Promise<Nullable<string>> {
+  editProduct({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Mutation, EditProductArgs>): Promisable<
+    Nullable<string>
+  > {
     throw new Error("Method not implemented.");
   }
-  getProduct(
-    args: GetProductArgs,
-    context: any,
-    info: GraphQLResolveInfo
-  ): Nullable<Product> | Promise<Nullable<Product>> {
+  getProduct({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Query, GetProductArgs>): Promisable<
+    Nullable<Product>
+  > {
     throw new Error("Method not implemented.");
   }
-  getUser(
-    args: GetUserArgs,
-    context: any,
-    info: GraphQLResolveInfo
-  ): Nullable<User> | Promise<Nullable<User>> {
+  getUser({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Query, GetUserArgs>): Promisable<Nullable<User>> {
     throw new Error("Method not implemented.");
   }
-  hello(): Nullable<string> | Promise<Nullable<string>> {
-    return "hello world";
+  hello(): Promisable<Nullable<string>> {
+    return "hello";
   }
-  sayHello(
-    args: SayHelloArgs,
-    context: any,
-    info: GraphQLResolveInfo
-  ): Nullable<string> | Promise<Nullable<string>> {
+  sayHello({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Query, SayHelloArgs>): Promisable<Nullable<string>> {
     return `hello ${args.name ?? "world"}`;
   }
-  searchProduct(): Nullable<Product>[] | Promise<Nullable<Product>[]> {
+  async sayHelloObj({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Query, SayHelloObjArgs>): Promise<
+    Nullable<SayHelloObjRes>
+  > {
+    return {
+      name: args.name,
+      user: async (args) => {
+        return {
+          name: args.source.name,
+          email: args.source.name + "@mail.com",
+        };
+      },
+    };
+  }
+  searchProduct(): Promisable<Nullable<Product>[]> {
     throw new Error("Method not implemented.");
   }
-  searchUser(): Nullable<User>[] | Promise<Nullable<User>[]> {
+  searchUser(): Promisable<Nullable<User>[]> {
     throw new Error("Method not implemented.");
   }
 }

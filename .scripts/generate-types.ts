@@ -8,8 +8,15 @@ async function main() {
   );
   const factory = new GraphqlTypesGenerator();
 
-  await factory.generate("./src/modules/**/*.graphql");
-  await factory.generate("./src/modules/**/*.graphql", { outputPath });
+  await factory.generate("./src/modules/**/*.graphql", {
+    contextTypePath: "./src/types/context.ts",
+    useObjectArgs: true,
+  });
+  await factory.generate("./src/modules/**/*.graphql", {
+    outputPath,
+    contextTypePath: "./src/types/context.ts",
+    useObjectArgs: true,
+  });
 }
 
 main();

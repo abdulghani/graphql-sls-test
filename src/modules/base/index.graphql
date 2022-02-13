@@ -10,4 +10,15 @@ type Query {
   say hello with a name
   """
   sayHello(name: String!): String
+  sayHelloObj(name: String!): SayHelloObjRes
+}
+
+type UUser {
+  name: String
+  email: String
+}
+
+type SayHelloObjRes {
+  name: String
+  user: UUser
 }

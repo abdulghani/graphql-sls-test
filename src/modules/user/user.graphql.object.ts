@@ -6,6 +6,7 @@
 
 /* tslint:disable */
 /* eslint-disable */
+
 import * as graphql from "graphql";
 
 export const UserBase = new graphql.GraphQLInterfaceType({
@@ -26,6 +27,14 @@ export const User = new graphql.GraphQLObjectType({
   },
 });
 
+export const Query = new graphql.GraphQLObjectType({
+  name: "Query",
+  fields: {
+    getUser: { type: User, args: { id: { type: graphql.GraphQLString } } },
+    searchUser: { type: new graphql.GraphQLList(User) },
+  },
+});
+
 export const AddUserInput = new graphql.GraphQLInputObjectType({
   name: "AddUserInput",
   fields: {
@@ -38,13 +47,5 @@ export const Mutation = new graphql.GraphQLObjectType({
   name: "Mutation",
   fields: {
     addUser: { type: User, args: { payload: { type: AddUserInput } } },
-  },
-});
-
-export const Query = new graphql.GraphQLObjectType({
-  name: "Query",
-  fields: {
-    getUser: { type: User, args: { id: { type: graphql.GraphQLString } } },
-    searchUser: { type: new graphql.GraphQLList(User) },
   },
 });

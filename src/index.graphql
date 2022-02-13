@@ -1,3 +1,9 @@
+#
+# -------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# -------------------------------------------------------
+#
+
 schema {
   query: Query
   mutation: Mutation
@@ -34,8 +40,19 @@ type Query {
   say hello with a name
   """
   sayHello(name: String!): String
+  sayHelloObj(name: String!): SayHelloObjRes
   searchProduct: [Product]
   searchUser: [User]
+}
+
+type SayHelloObjRes {
+  name: String
+  user: UUser
+}
+
+type UUser {
+  name: String
+  email: String
 }
 
 type User implements UserBase {
