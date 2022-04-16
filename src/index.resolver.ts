@@ -1,9 +1,12 @@
 import {
+  EntityResolver,
   GraphqlResolverArgs,
+  Mutation,
   Nullable,
   Promisable,
   Query,
   Resolver as _Resolver,
+  SaveHelloArgs,
   SayHelloArgs,
   SayHelloArrArgs,
   SayHelloObjArgs,
@@ -11,6 +14,23 @@ import {
 } from "./index.graphql.types";
 
 class Resolver implements _Resolver {
+  entityResolver: EntityResolver = {
+    resolveMyUser: async ({ args, context, info, source }) => {
+      return {};
+    },
+  };
+
+  saveHello({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<Mutation, SaveHelloArgs>): Promisable<
+    Nullable<string>
+  > {
+    throw new Error("Method not implemented.");
+  }
+
   sayHelloArr({
     source,
     args,

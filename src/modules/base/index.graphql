@@ -20,6 +20,20 @@ type Query {
   sayHelloArr(name: String!): [SayHelloObjRes]
 }
 
+type Mutation {
+  saveHello(name: String!): String
+}
+
+type MyUser {
+  id: String
+  age: Int
+  isAdult: Boolean!
+}
+
+"""
+return type of hello with object
+"""
 type SayHelloObjRes {
   name: String
+  user: MyUser
 }

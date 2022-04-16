@@ -1,12 +1,23 @@
 #
 # -------------------------------------------------------
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
-# npm i -D @adgstudio/graphql-generator (version 0.1.18)
+# npm i -D @adgstudio/graphql-generator (version 0.1.19)
 # -------------------------------------------------------
 #
 
 schema {
   query: Query
+  mutation: Mutation
+}
+
+type Mutation {
+  saveHello(name: String!): String
+}
+
+type MyUser {
+  id: String
+  age: Int
+  isAdult: Boolean!
 }
 
 """
@@ -31,6 +42,10 @@ type Query {
   sayHelloArr(name: String!): [SayHelloObjRes]
 }
 
+"""
+return type of hello with object
+"""
 type SayHelloObjRes {
   name: String
+  user: MyUser
 }

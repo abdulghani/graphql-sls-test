@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
- * npm i -D @adgstudio/graphql-generator (version 0.1.18)
+ * npm i -D @adgstudio/graphql-generator (version 0.1.19)
  * -------------------------------------------------------
  */
 
@@ -33,6 +33,7 @@ export type Resolvable<TSource, TResult, TArgs = {}> =
 export interface SayHelloObjRes {
   __typename?: "SayHelloObjRes";
   name?: Nullable<string>;
+  user?: Resolvable<this, Nullable<MyUser>>;
 }
 
 export interface Query {
@@ -74,4 +75,25 @@ export interface SayHelloObjArgs {
   name: string;
 }
 
-export type Resolver = Omit<Query, "__typename">;
+export interface MyUser {
+  __typename?: "MyUser";
+  age?: Nullable<number>;
+  id?: Nullable<string>;
+  isAdult: boolean;
+}
+
+export interface Mutation {
+  __typename?: "Mutation";
+  saveHello({
+    source,
+    args,
+    context,
+    info,
+  }: GraphqlResolverArgs<this, SaveHelloArgs>): Promisable<Nullable<string>>;
+}
+
+export interface SaveHelloArgs {
+  name: string;
+}
+
+export type Resolver = Omit<Mutation, "__typename"> & Omit<Query, "__typename">;

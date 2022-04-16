@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
- * npm i -D @adgstudio/graphql-generator (version 0.1.18)
+ * npm i -D @adgstudio/graphql-generator (version 0.1.19)
  * -------------------------------------------------------
  */
 
@@ -10,9 +10,31 @@
 
 import * as graphql from "graphql";
 
+export const Mutation = new graphql.GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    saveHello: {
+      type: graphql.GraphQLString,
+      args: {
+        name: { type: new graphql.GraphQLNonNull(graphql.GraphQLString) },
+      },
+    },
+  },
+});
+
+export const MyUser = new graphql.GraphQLObjectType({
+  name: "MyUser",
+  fields: {
+    id: { type: graphql.GraphQLString },
+    age: { type: graphql.GraphQLInt },
+    isAdult: { type: new graphql.GraphQLNonNull(graphql.GraphQLBoolean) },
+  },
+});
+
 export const SayHelloObjRes = new graphql.GraphQLObjectType({
   name: "SayHelloObjRes",
-  fields: { name: { type: graphql.GraphQLString } },
+  description: "return type of hello with object",
+  fields: { name: { type: graphql.GraphQLString }, user: { type: MyUser } },
 });
 
 export const Query = new graphql.GraphQLObjectType({
