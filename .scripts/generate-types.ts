@@ -10,12 +10,10 @@ async function main() {
 
   await factory.generate("./src/modules/**/*.graphql", {
     contextTypePath: "./src/types/context.ts",
-    useObjectArgs: true,
   });
   await factory.generate("./src/modules/**/*.graphql", {
     outputPath,
     contextTypePath: "./src/types/context.ts",
-    useObjectArgs: true,
   });
 }
 
