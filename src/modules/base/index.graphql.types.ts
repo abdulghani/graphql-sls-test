@@ -1,7 +1,7 @@
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
- * npm i -D @adgstudio/graphql-generator (version 0.1.19)
+ * npm i -D @adgstudio/graphql-generator (version 0.1.21)
  * -------------------------------------------------------
  */
 
@@ -9,11 +9,15 @@
 /* eslint-disable */
 
 import * as graphql from "graphql";
-import GraphqlContext from "../../types/context";
+import IMPORTED_CONTEXT from "../../types/context";
 
 export type Nullable<T> = T | null | undefined;
 
 export type Promisable<T> = T | Promise<T>;
+
+export interface GraphqlContext extends IMPORTED_CONTEXT {
+  entityResolvers: EntityResolver;
+}
 
 export type GraphqlResolverArgs<TSource = any, TArgs = any> = {
   source: TSource;
@@ -23,12 +27,15 @@ export type GraphqlResolverArgs<TSource = any, TArgs = any> = {
 };
 
 export type GraphqlFieldResolver<TSource, TArgs, TResult> = (
-  args: GraphqlResolverArgs<TSource, TArgs>
+  source: TSource,
+  args: TArgs,
+  context: GraphqlContext,
+  info: graphql.GraphQLResolveInfo
 ) => Promisable<TResult>;
 
-export type Resolvable<TSource, TResult, TArgs = {}> =
+export type Resolvable<TSource, TResult> =
   | TResult
-  | GraphqlFieldResolver<TSource, TArgs, TResult>;
+  | GraphqlFieldResolver<TSource, unknown, TResult>;
 
 export interface SayHelloObjRes {
   __typename?: "SayHelloObjRes";
@@ -39,28 +46,24 @@ export interface SayHelloObjRes {
 export interface Query {
   __typename?: "Query";
   hello(): Promisable<Nullable<string>>;
-  sayHello({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<this, SayHelloArgs>): Promisable<Nullable<string>>;
-  sayHelloArr({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<this, SayHelloArrArgs>): Promisable<
-    Array<Nullable<SayHelloObjRes>>
-  >;
-  sayHelloObj({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<this, SayHelloObjArgs>): Promisable<
-    Nullable<SayHelloObjRes>
-  >;
+  sayHello(
+    source: unknown,
+    args: SayHelloArgs,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promisable<Nullable<string>>;
+  sayHelloArr(
+    source: unknown,
+    args: SayHelloArrArgs,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promisable<Array<Nullable<SayHelloObjRes>>>;
+  sayHelloObj(
+    source: unknown,
+    args: SayHelloObjArgs,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promisable<Nullable<SayHelloObjRes>>;
 }
 
 export interface SayHelloArgs {
@@ -84,16 +87,45 @@ export interface MyUser {
 
 export interface Mutation {
   __typename?: "Mutation";
-  saveHello({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<this, SaveHelloArgs>): Promisable<Nullable<string>>;
+  saveHello(
+    source: unknown,
+    args: SaveHelloArgs,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promisable<Nullable<string>>;
 }
 
 export interface SaveHelloArgs {
   name: string;
 }
 
-export type Resolver = Omit<Mutation, "__typename"> & Omit<Query, "__typename">;
+export interface EntityResolver {
+  resolveSayHelloObjRes?(
+    source: unknown,
+    args: unknown,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promise<SayHelloObjRes | undefined>;
+  resolveQuery?(
+    source: unknown,
+    args: unknown,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promise<Query | undefined>;
+  resolveMyUser?(
+    source: unknown,
+    args: unknown,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promise<MyUser | undefined>;
+  resolveMutation?(
+    source: unknown,
+    args: unknown,
+    context: GraphqlContext,
+    info: graphql.GraphQLResolveInfo
+  ): Promise<Mutation | undefined>;
+}
+
+export interface Resolver
+  extends Omit<Mutation, "__typename">,
+    Omit<Query, "__typename"> {}

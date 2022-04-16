@@ -1,5 +1,7 @@
+import { GraphQLResolveInfo } from "graphql";
 import {
   EntityResolver,
+  GraphqlContext,
   GraphqlResolverArgs,
   Mutation,
   Nullable,
@@ -14,59 +16,47 @@ import {
 } from "./index.graphql.types";
 
 class Resolver implements _Resolver {
-  entityResolver: EntityResolver = {
-    resolveMyUser: async ({ args, context, info, source }) => {
-      return {};
-    },
-  };
-
-  saveHello({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<Mutation, SaveHelloArgs>): Promisable<
-    Nullable<string>
-  > {
+  saveHello(
+    source: this,
+    args: SaveHelloArgs,
+    context: GraphqlContext,
+    info: GraphQLResolveInfo
+  ): Promisable<Nullable<string>> {
     throw new Error("Method not implemented.");
   }
-
-  sayHelloArr({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<Query, SayHelloArrArgs>): Promisable<
-    Nullable<SayHelloObjRes>[]
-  > {
+  hello(): Promisable<Nullable<string>> {
+    return "hello world";
+  }
+  sayHello(
+    source: this,
+    args: SayHelloArgs,
+    context: GraphqlContext,
+    info: GraphQLResolveInfo
+  ): Promisable<Nullable<string>> {
+    return `hello ${args.name ?? "world"}`;
+  }
+  sayHelloArr(
+    source: this,
+    args: SayHelloArrArgs,
+    context: GraphqlContext,
+    info: GraphQLResolveInfo
+  ): Promisable<Nullable<SayHelloObjRes>[]> {
     return [
       {
         name: args.name,
       },
     ];
   }
-  sayHelloObj({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<Query, SayHelloObjArgs>): Promisable<
-    Nullable<SayHelloObjRes>
-  > {
+  sayHelloObj(
+    source: this,
+    args: SayHelloObjArgs,
+    context: GraphqlContext,
+    info: GraphQLResolveInfo
+  ): Promisable<Nullable<SayHelloObjRes>> {
+    console.log("source", { source });
     return {
       name: args.name,
     };
-  }
-  hello(): Promisable<Nullable<string>> {
-    return "hello world";
-  }
-  sayHello({
-    source,
-    args,
-    context,
-    info,
-  }: GraphqlResolverArgs<Query, SayHelloArgs>): Promisable<Nullable<string>> {
-    return `hello ${args.name ?? "world"}`;
   }
 }
 
